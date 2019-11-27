@@ -9,6 +9,7 @@ import com.achteck.misc.types.ConfMat;
 import com.achteck.misc.types.ParamSetOrganizer;
 import de.planet.imaging.types.HybridImage;
 import de.uros.citlab.confmat.CharMap;
+import de.uros.citlab.errorrate.types.PathCalculatorGraph;
 import de.uros.citlab.errorrate.util.ObjectCounter;
 import de.uros.citlab.module.htr.HTRParser;
 import de.uros.citlab.module.htr.HTRParserPlus;
@@ -259,7 +260,8 @@ public class Text2ImageParser extends ParamSetOrganizer implements IText2Image {
             folder.mkdirs();
             String name = new File(pathToText).getName();
             name = name.substring(0, name.lastIndexOf("."));
-            textAligner.setDebugOutput(3000, new File(folder, name + ".png"), false);
+            throw new RuntimeException("so far no export for debug images implemented");
+//            textAligner.setDynMatViewer(new PathCalculatorGraph.ImageExportDynMatViewer(new File(folder, name + ".png")));
         }
         if (maxCount > 0) {
             textAligner.setMaxVertexCount(maxCount);
