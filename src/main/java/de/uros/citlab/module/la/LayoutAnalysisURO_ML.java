@@ -25,15 +25,10 @@ import eu.transkribus.interfaces.types.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 import java.util.List;
-import java.util.logging.Level;
-import javax.imageio.ImageIO;
 
 /**
  * @author tobi
