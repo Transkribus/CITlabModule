@@ -1,8 +1,7 @@
 # Change Log
 
-
 # 2.5.1
-* incorporate bugfix /pullrequest #5 : after outOfMemory Exception process further 
+* better error handling/notification/logging for OutOfMemoryException
 
 # 2.5.0
 * feature T2I: if no file to a text file is given, method utilizes the special reference text lines in XML-file

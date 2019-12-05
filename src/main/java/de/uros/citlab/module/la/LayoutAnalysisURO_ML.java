@@ -9,6 +9,7 @@ import com.achteck.misc.types.Pair;
 import com.achteck.misc.util.ArrayUtil;
 import de.planet.imaging.types.HybridImage;
 import de.planet.math.geom2d.types.Polygon2DInt;
+import de.planet.math.geom2d.types.Rectangle2DInt;
 import de.planet.math.util.PolygonHelper;
 import de.uros.citlab.module.types.Key;
 import de.uros.citlab.module.util.*;
@@ -24,7 +25,6 @@ import eu.transkribus.interfaces.types.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
 import java.io.File;
 import java.io.Serializable;
 import java.util.*;
@@ -319,16 +319,74 @@ public class LayoutAnalysisURO_ML implements ILayoutAnalysis, Serializable {
             }
         } else {
             int assigned = 0;
+            List<List<Polygon2DInt>> assignedBLs = new ArrayList<>();
+            List<Polygon2DInt> regPolys = new ArrayList<>();
+            List<Rectangle2DInt> regBBs = new ArrayList<>();
             for (TextRegionType aReg : reducedTextRegions) {
                 List<Polygon2DInt> regBLs = new ArrayList<>();
+                assignedBLs.add(regBLs);
                 CoordsType aCoords = aReg.getCoords();
-                Polygon aRegPoly = PolygonUtil.string2Polygon(aCoords.getPoints());
+                Polygon2DInt aRegPoly = PolygonUtil.string2Polygon2DInt(aCoords.getPoints());
+                regPolys.add(aRegPoly);
+                Rectangle2DInt aBB = aRegPoly.getBounds();
+                regBBs.add(new Rectangle2DInt(aBB.x - 32, aBB.y - 32, aBB.w + 64, aBB.h + 64));
+            }
+            if (bls != null) {
                 for (Polygon2DInt aBL : bls) {
-                    if (aRegPoly.contains(aBL.xpoints[aBL.npoints / 2], aBL.ypoints[aBL.npoints / 2])) {
+                    int winningIdx = -1;
+                    for (int regIdx = 0; regIdx < reducedTextRegions.size(); regIdx++) {
+                        Polygon2DInt aPoly = regPolys.get(regIdx);
+                        Rectangle2DInt aBB = regBBs.get(regIdx);
+                        if (aBB.contains(aBL.xpoints[aBL.npoints / 2], aBL.ypoints[aBL.npoints / 2])) {
+//                            if(aPoly.contains(aBL.xpoints[aBL.npoints / 2], aBL.ypoints[aBL.npoints / 2]) ||aPoly.contains(aBL.xpoints[aBL.npoints / 2], aBL.ypoints[aBL.npoints / 2] - 10)){
+                            if (aPoly.contains(aBL.xpoints[aBL.npoints / 2], aBL.ypoints[aBL.npoints / 2] - 10)) {
+                                if (winningIdx < 0) {
+                                    winningIdx = regIdx;
+                                } else {
+                                    Rectangle2DInt wBB = regBBs.get(winningIdx);
+                                    if (aBB.y + aBB.h / 2 < wBB.y + wBB.h / 2) {
+                                        winningIdx = regIdx;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (winningIdx >= 0) {
+                        assignedBLs.get(winningIdx).add(aBL);
                         assigned++;
-                        regBLs.add(aBL);
                     }
                 }
+            }
+
+            for (int regIdx = 0; regIdx < reducedTextRegions.size(); regIdx++) {
+                TextRegionType aReg = reducedTextRegions.get(regIdx);
+                List<Polygon2DInt> regBLs = assignedBLs.get(regIdx);
+//                CoordsType aCoords = aReg.getCoords();
+//                Polygon aRegPoly = PolygonUtil.string2Polygon(aCoords.getPoints());
+//                Rectangle aRegBB = aRegPoly.getBounds();
+//                for (Polygon2DInt aBL : bls) {
+//                    // Have a look whether we match or not.
+//                    if (aRegPoly.contains(aBL.xpoints[aBL.npoints / 2], aBL.ypoints[aBL.npoints / 2]) || aRegPoly.contains(aBL.xpoints[aBL.npoints / 2], aBL.ypoints[aBL.npoints / 2] - 10)) {
+//                        boolean assignIt = true;
+//                        // Have a look if there is a better TextRegion to match to
+//                        for (TextRegionType cReg : reducedTextRegions) {
+//                            if(cReg == aReg) continue;
+//                            CoordsType cCoords = cReg.getCoords();
+//                            Polygon cRegPoly = PolygonUtil.string2Polygon(cCoords.getPoints());
+//                            Rectangle cRegBB = cRegPoly.getBounds();
+//                            if(cRegBB.y + cRegBB.height/2 < aRegBB.y + aRegBB.height/2){
+//                                if (cRegPoly.contains(aBL.xpoints[aBL.npoints / 2], aBL.ypoints[aBL.npoints / 2]) || cRegPoly.contains(aBL.xpoints[aBL.npoints / 2], aBL.ypoints[aBL.npoints / 2] - 10)) {
+////                                    assignIt = false;
+//                                    break;
+//                                }
+//                            }
+//                        }
+//                        if(assignIt){
+//                            assigned++;
+//                            regBLs.add(aBL);
+//                        }
+//                    }
+//                }
                 List<Cluster> regCluster;
                 regCluster = clusterBLs(
                         hi,
