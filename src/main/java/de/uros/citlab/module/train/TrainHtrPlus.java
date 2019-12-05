@@ -84,7 +84,7 @@ public class TrainHtrPlus extends TrainHtr {
                 + "Trains an HTR-Model with a given training set and validates it with a given validation set.\n"
                 + Key.THREADS + "=<POS_NUMBER>: Number of threads for training\n"
                 + Key.TRAINSIZE + "=<NUMBER>: Size of one training Epoch. If value is <0, in one epoch each training sample is used one time.\n"
-                + Key.EST + "=<POS_NUMBER>: If there are <POS_NUMBER> numbers of epochs without improvements, trainings is stopped. (default=-1[==>off])\n"
+//                + Key.EST + "=<POS_NUMBER>: If there are <POS_NUMBER> numbers of epochs without improvements, trainings is stopped. (default=-1[==>off])\n"
                 + Key.EPOCHS + "=<POS_NUMBER>: Number of epochs (default=1)\n"
                 + Key.LEARNINGRATE + "=<DOUBLE>: Effective learning rate (default=5e-3). To change the learning rate over epochs, separate the rates by ';'(e.g. 5e-3;1e-3). "
                 + "Then, for each learning rate the given numer of epochs is trained. It is also possible to specify the number of epochs for each learning rate by separate epochs by ';'. "
