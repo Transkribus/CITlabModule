@@ -26,12 +26,11 @@ import eu.transkribus.core.model.beans.customtags.ReadingOrderTag;
 import eu.transkribus.core.model.beans.pagecontent.PcGtsType;
 import eu.transkribus.core.model.beans.pagecontent.TextLineType;
 import eu.transkribus.core.model.beans.pagecontent.TextRegionType;
+import eu.transkribus.core.util.LogUtil.Level;
 import eu.transkribus.core.util.PageXmlUtils;
 import eu.transkribus.core.util.SysResourcesUtil;
-import eu.transkribus.core.util.LogUtil.Level;
 import eu.transkribus.interfaces.types.Image;
 import eu.transkribus.interfaces.types.Image.Type;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -126,11 +125,11 @@ public class HTRParserPlus extends Observable implements IHtrCITlab {
     }
 
     public HTR getHTR(String om, String lm, String cm, String storageDir, String[] props) {
-        HTR htrDummy = new HTR(om, lm, cm);
+        HTR htrDummy = new HTR(om, lm, cm, props);
         int hash = htrDummy.hashCode();
         if (!htrs.containsKey(hash)) {
             ISNetwork network = getNetwork(om, cm);
-            ILangMod langMod = HTRParser.getLangMod(lm, network.getCharMap(), props);
+            ILangMod langMod = HTRParser.getLangMod(om, lm, network.getCharMap(), props);
             htrs.put(hash, new HTR(network, langMod, om, lm, cm, props));
         }
         HTR res = htrs.get(hash);
@@ -161,16 +160,16 @@ public class HTRParserPlus extends Observable implements IHtrCITlab {
             }
         }
     }
-    
+
     private String getPathFromImageOrPcGtsType(Image image, PcGtsType xmlFile) {
-        String imgPath=xmlFile.getPage().getImageFilename();
+        String imgPath = xmlFile.getPage().getImageFilename();
         if (image.hasType(Type.URL)) {
-        	URL url = image.getImageUrl();
-        	if (url != null) {
-        		imgPath = url.toString();
-        	}
+            URL url = image.getImageUrl();
+            if (url != null) {
+                imgPath = url.toString();
+            }
         }
-    	return imgPath;
+        return imgPath;
     }
 
     @Override
@@ -206,16 +205,16 @@ public class HTRParserPlus extends Observable implements IHtrCITlab {
                     notifyObservers(new ErrorNotification(xmlFile, lineImage.getTextLine().getId(), new RuntimeException("ignore tags " + text.getTags()), TrainHtrPlus.class));
                 }
 //            textEquivType.setConf(new Float(result.getSecond()));
-                LOG.info("decoded '" + result + "' for textline " + textLine.getId() + " with" + ((PropertyUtil.isPropertyTrue(props, Key.RAW) || !useDict(pathToLanguageModel)) ? "out" : "") + " language model .");
+                LOG.info("decoded '" + result + "' for textline " + textLine.getId() + " with" + (htr.isLM(props) ? "out" : "") + " language model .");
             } catch (RuntimeException ex) {
                 notifyObservers(new ErrorNotification(xmlFile, lineImage.getTextLine().getId(), ex, TrainHtrPlus.class));
 //                PageXmlUtil.deleteCustomTags(textLine, ReadingOrderTag.TAG_NAME);
 //                PageXmlUtil.setTextEquiv(textLine, "");
             } catch (OutOfMemoryError ex) {
-            	String imgPath = getPathFromImageOrPcGtsType(image, xmlFile);
-            	LOG.error("OutOfMemoryError image="+imgPath+" lineid="+textLine.getId());
-            	SysResourcesUtil.logMemUsage(LOG, Level.ERROR, true);
-            	System.gc();
+                String imgPath = getPathFromImageOrPcGtsType(image, xmlFile);
+                LOG.error("OutOfMemoryError image=" + imgPath + " lineid=" + textLine.getId());
+                SysResourcesUtil.logMemUsage(LOG, Level.ERROR, true);
+                System.gc();
                 notifyObservers(new ErrorNotification(xmlFile, lineImage.getTextLine().getId(), ex, TrainHtrPlus.class));
 //                PageXmlUtil.deleteCustomTags(textLine, ReadingOrderTag.TAG_NAME);
 //                PageXmlUtil.setTextEquiv(textLine, "");
@@ -244,7 +243,7 @@ public class HTRParserPlus extends Observable implements IHtrCITlab {
 
     @Override
     public String getProvider() {
-        return MetadataUtil.getProvider("Gundram Leifert", "gundram.leifert@uni-rostock.de");
+        return MetadataUtil.getProvider("Gundram Leifert", "gundram.leifert@planet-ai.de");
     }
 
     @Override

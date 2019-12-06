@@ -27,7 +27,7 @@ import java.util.List;
  *
  * Since 29.01.2016
  *
- * @author Tobi <tobias.gruening@uni-rostock.de>
+ * @author Tobi <tobias.gruening@planet-ai.de>
  */
 public class B2PSeamRecalc extends B2PSeam {
 

@@ -1,5 +1,5 @@
 /*
- * File: LinRegression 
+ * File: LinRegression
  * Created: 10:04:10 05.12.2014
  * Encoding: UTF-8
  */
@@ -10,9 +10,9 @@ import com.achteck.misc.log.Logger;
 import de.planet.math.util.MatrixUtil;
 
 /**
- * Describtion of LinRegression: 
+ * Describtion of LinRegression:
  *
- * @author Tobias Grüning <tobias.gruening@uni-rostock.de>
+ * @author Tobias Grüning <tobias.gruening@planet-ai.de>
  */
 public class LinRegression {
 
@@ -66,6 +66,6 @@ public class LinRegression {
         double[] res = MatrixUtil.multiply(inv, multRS);
         return res;
     }
-    
-    
+
+
 } 

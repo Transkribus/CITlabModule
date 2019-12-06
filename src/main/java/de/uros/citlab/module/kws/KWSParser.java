@@ -93,7 +93,7 @@ public class KWSParser extends Observable implements IKeywordSpotter {
 
     @Override
     public String getProvider() {
-        return MetadataUtil.getProvider("Tobias Strauss", "tobias.strauss@uni-rostock.de");
+        return MetadataUtil.getProvider("Tobias Strauss", "tobias.strauss@planet-ai.de");
     }
 
     @Override

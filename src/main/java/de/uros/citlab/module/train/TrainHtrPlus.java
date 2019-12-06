@@ -36,8 +36,6 @@ public class TrainHtrPlus extends TrainHtr {
     //    public static final String NAME_FROZEN = "frozen_model.pb";
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LoggerFactory.getLogger(TrainHtrPlus.class.getName());
-    private static final String provider = "University of Rostock\nInstitute of Mathematics\nCITlab\nGundram Leifert\ngundram.leifert@uni-rostock.de";
-    private static final String name = TrainHtrPlus.class.getName();
 
     public TrainHtrPlus() {
         super();
@@ -131,21 +129,6 @@ public class TrainHtrPlus extends TrainHtr {
             FileUtil.copyFile(charMap, charMapHtr);
         }
         // Execute python script to build the TensorFlow model and save it
-    }
-
-    @Override
-    public String getToolName() {
-        return name;
-    }
-
-    @Override
-    public String getVersion() {
-        return MetadataUtil.getSoftwareVersion();
-    }
-
-    @Override
-    public String getProvider() {
-        return provider;
     }
 
     private static File getTmpDir(String[] props) {
@@ -291,7 +274,7 @@ public class TrainHtrPlus extends TrainHtr {
         		LOG.warn("Could not delete obsolete .pb file: {}", pb.getAbsolutePath());
         	}
         }
-	}
+    }
 
     private String[] getFurtherTrainingProperties(
             String[] propsTraining,
@@ -555,7 +538,7 @@ public class TrainHtrPlus extends TrainHtr {
         imagePreprocModules.addModule("crop", new Cropper());
         imagePreprocModules.addModule("squash", new BasicMainBodyNormalizer());
         imagePreprocModules.setParamPrefix("");
-        ParamSet ps = imagePreprocModules.getDefaultParamSet((ParamSet)null);
+        ParamSet ps = imagePreprocModules.getDefaultParamSet((ParamSet) null);
         double lower = (1.0D - pquantil_p) * 0.5D;
         double upper = 1.0D - lower;
         ps.getParam("size/size_normalizer_lower_hist_type").copyFrom(SizeNormalizationUtil.VHistType.COLOR_CHANGE.toString());

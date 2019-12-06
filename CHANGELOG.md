@@ -1,5 +1,10 @@
 # Change Log
 
+# 2.6.0
+* feature LA: if regions overlap, baselines are will not be separated or deleted.
+* feature HTR(x): If the process gets as property "use_lr" = "true", a language resource in the HTR folder is assumed.
+If "use_lr" = <path-to-language-resource> , this language resource is taken.  
+
 # 2.5.1
 * better error handling/notification/logging for OutOfMemoryException
 

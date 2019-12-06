@@ -6,8 +6,8 @@
 package de.uros.citlab.module.feat;
 
 import com.achteck.misc.log.Logger;
-import de.planet.math.util.MatrixUtil;
 import de.planet.decoding.util.ConfMatHelper;
+import de.planet.math.util.MatrixUtil;
 import de.planet.sprnn.SLayer;
 import de.planet.sprnn.SNet;
 import de.planet.sprnn.util.SNetUtils;
@@ -16,6 +16,7 @@ import de.uros.citlab.module.util.FeatureIO;
 import de.uros.citlab.module.util.FeatureUtil;
 import de.uros.citlab.module.util.MetadataUtil;
 import eu.transkribus.interfaces.types.Image;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -23,7 +24,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
- *
  * @author gundram
  */
 public class FeatNetwork implements IFeatureGeneratorStreamable {
@@ -109,7 +109,7 @@ public class FeatNetwork implements IFeatureGeneratorStreamable {
 
     @Override
     public String getProvider() {
-        return "University of Rostock\nInstitute of Mathematics\nCITlab\nGundram Leifert\ngundram.leifert@uni-rostock.de";
+        return MetadataUtil.getProvider("Gundram Leifert", "gundram.leifert@planet-ai.de");
     }
 
     @Override

@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.Serializable;
 import java.util.*;
-import java.util.List;
 
 /**
  * @author tobi
@@ -277,7 +276,7 @@ public class LayoutAnalysisURO_ML implements ILayoutAnalysis, Serializable {
 
     @Override
     public String getProvider() {
-        return MetadataUtil.getProvider("Tobias Gruening", "tobias.gruening@uni-rostock.de");
+        return MetadataUtil.getProvider("Tobias Gruening", "tobias.gruening@planet-ai.de");
     }
 
     @Override
@@ -354,6 +353,10 @@ public class LayoutAnalysisURO_ML implements ILayoutAnalysis, Serializable {
                     if (winningIdx >= 0) {
                         assignedBLs.get(winningIdx).add(aBL);
                         assigned++;
+                    } else {
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("Baseline {} cannot be assigned to one of the {} regions.", PolygonUtil.polygon2String(aBL), reducedTextRegions.size());
+                        }
                     }
                 }
             }
@@ -416,7 +419,7 @@ public class LayoutAnalysisURO_ML implements ILayoutAnalysis, Serializable {
 
             }
             if (assigned != bls.size()) {
-                LOG.warn("Number of BLs which were assigned to regions is inconsistent!");
+                LOG.warn("Ignored {} BLs because test regions are given", bls.size() - assigned);
             }
         }
         return page;

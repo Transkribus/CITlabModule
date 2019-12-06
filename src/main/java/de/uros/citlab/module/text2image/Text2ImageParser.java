@@ -63,7 +63,7 @@ public class Text2ImageParser extends ParamSetOrganizer implements IText2Image {
 
     @Override
     public String getProvider() {
-        return MetadataUtil.getProvider("Gundram Leifert", "gundram.leifert@gmx.de");
+        return MetadataUtil.getProvider("Gundram Leifert", "gundram.leifert@planet-ai.de");
     }
 
     public enum Stat {

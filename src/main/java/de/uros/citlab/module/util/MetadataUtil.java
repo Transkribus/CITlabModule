@@ -33,13 +33,13 @@ public class MetadataUtil {
     }
 
     public static String getProvider(String nameOfPerson, String email) {
-        return "University of Rostock/Institute of Mathematics/CITlab"
+        return "University of Rostock/Institute of Mathematics/CITlab|PLANET AI GmbH"
                 + (nameOfPerson != null && !nameOfPerson.isEmpty() ? "/" + nameOfPerson : "")
                 + (email != null && !email.isEmpty() ? "/" + email : "");
     }
 
     public static String getSoftwareVersion() {
-        return "2.5.1";
+        return "2.6.0";
     }
 
 }

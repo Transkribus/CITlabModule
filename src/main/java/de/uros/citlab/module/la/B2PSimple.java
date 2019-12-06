@@ -18,7 +18,7 @@ import de.uros.citlab.module.interfaces.IB2P;
  *
  * Since 29.01.2016
  *
- * @author Tobi <tobias.gruening@uni-rostock.de>
+ * @author Tobi <tobias.gruening@planet-ai.de>
  */
 public class B2PSimple extends B2PSeamRecalc implements IB2P {
 

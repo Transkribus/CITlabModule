@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -46,8 +47,8 @@ public class HTR {
     private ConfMatContainer cmc;
     private String[] props;
 
-    public HTR(String om, String lm, String cm) {
-        this(null, null, om, lm, cm, null);
+    public HTR(String om, String lm, String cm, String[] props) {
+        this(null, null, om, lm, cm, props);
     }
 
     public HTR(ISNetwork htrImpl, ILangMod lmImpl, String om, String lm, String cm, String[] props) {
@@ -113,6 +114,7 @@ public class HTR {
         hash = 17 * hash + Objects.hashCode(this.om);
         hash = 17 * hash + Objects.hashCode(this.lm);
         hash = 17 * hash + Objects.hashCode(this.cm);
+        hash = 17 * hash + Arrays.hashCode(this.props);
         return hash;
     }
 
@@ -137,6 +139,9 @@ public class HTR {
         if (!Objects.equals(this.cm, other.cm)) {
             return false;
         }
+        if (Arrays.equals(this.props, other.props)) {
+            return false;
+        }
         return true;
     }
 
@@ -154,7 +159,7 @@ public class HTR {
 //    }
     public Result getText(LineImage li, String[] props) {
         ConfMat confMat = getConfMat(li, props);
-        if (PropertyUtil.isPropertyTrue(props, Key.RAW) || lmImpl == null) {
+        if (!isLM(props)) {
             return new Result(confMat.toString(), confMat);
         }
 //        ConfMatUtil.getProbMat(confMat).save(new File("debug_res", li.getTextLine().getId() + "_cm.png").getAbsolutePath());
@@ -162,6 +167,10 @@ public class HTR {
         lmImpl.setConfMat(confMat);
         ILangModResult result = lmImpl.getResult();
         return new Result(result.getText(), confMat);
+    }
+
+    public boolean isLM(String[] props) {
+        return !PropertyUtil.isPropertyTrue(props, Key.RAW) && lmImpl != null;
     }
 
     public static class Result {

@@ -364,7 +364,7 @@ public class LayoutAnalysisParser /*extends ParamTreeOrganizer*/ implements ILay
 
     @Override
     public String getProvider() {
-        return MetadataUtil.getProvider("Tobias Gruening", "tobias.gruening@uni-rostock.de");
+        return MetadataUtil.getProvider("Tobias Gruening", "tobias.gruening@planet-ai.de");
     }
 
     @Override

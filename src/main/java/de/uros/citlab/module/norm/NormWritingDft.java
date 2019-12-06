@@ -75,7 +75,7 @@ public class NormWritingDft implements IFeatureGenerator {
 
     @Override
     public String getProvider() {
-        return "University of Rostock\nInstitute of Mathematics\nCITlab\nGundram Leifert\ngundram.leifert@uni-rostock.de";
+        return MetadataUtil.getProvider("Gundram Leifert", "gundram.leifert@planet-ai.de");
     }
 
     @Override

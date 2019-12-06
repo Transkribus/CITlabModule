@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  *
  * Since 03.06.2016
  *
- * @author Tobias (tobias.strauss@uni-rostock.de)
+ * @author Tobias (tobias.strauss@planet-ai.de)
  */
 public class LangModConfigurator {
 

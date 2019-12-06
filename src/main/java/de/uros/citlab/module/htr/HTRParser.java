@@ -15,7 +15,6 @@ import de.planet.itrtech.types.IDictOccurrence;
 import de.planet.langmod.LangMod;
 import de.planet.langmod.LangModFullText;
 import de.planet.langmod.types.ILangMod;
-import de.planet.languagemodel.langmod.LanguageDecoderLangModAdapter;
 import de.planet.math.geom2d.types.Polygon2DInt;
 import de.planet.reco.types.SNetwork;
 import de.planet.util.types.DictOccurrence;
@@ -84,7 +83,40 @@ public class HTRParser implements IHtrCITlab {
     }
 
     public static ILangMod getLangMod(String pathLanguageModel, CharMap<Integer> cm, String[] props) {
+        return getLangMod(null, pathLanguageModel, cm, props);
+    }
+
+    public static ILangMod getLangMod(String pathHTR, String pathLanguageModel, CharMap<Integer> cm, String[] props) {
 //so far a dictionary is a langmod - this changes later
+        if (PropertyUtil.hasProperty(props, Key.HTR_USE_LR)) {
+            if (useDict(pathLanguageModel)) {
+                throw new RuntimeException("path to language model and usage of language resource set: " + pathLanguageModel + " and " + PropertyUtil.getProperty(props, Key.HTR_USE_LR));
+            }
+            boolean lrFromHTR = PropertyUtil.isPropertyTrue(props, Key.HTR_USE_LR);
+            if (lrFromHTR && (pathHTR == null || pathHTR.isEmpty())) {
+                throw new RuntimeException("Language Resource from HTR should be used, but no HTR path given.");
+            }
+            String value = PropertyUtil.getProperty(props, Key.HTR_USE_LR);
+            File file = value.equals("true") ? new File(new File(pathHTR), TrainDataUtil.lr) : new File(value);
+            if (!file.exists()) {
+                throw new RuntimeException("cannot find language resource " + file.getAbsolutePath());
+            }
+            if (!file.getName().endsWith(".txt")) {
+                throw new RuntimeException("language resource has to have the suffix '.txt'");
+            }
+//            FileUtil.readLines(file);
+            return new LanguageDecoderLangModAdapter(file.getPath(),
+                    String.valueOf(de.uros.citlab.confmat.CharMap.NaC),
+                    1.0,
+                    -1.5,
+                    0.0);
+//            File rlPath = lrFromHTR?
+//                    new File (new File(pathHTR, TrainDataUtil.get.))
+//            ILangMod res = new LanguageDecoderLangModAdapter()
+//            FileUtil.readLines()
+
+
+        }
         if (useDict(pathLanguageModel)) {
             if (pathLanguageModel.endsWith(".bin")) {
                 //use better version of LM
@@ -183,11 +215,11 @@ public class HTRParser implements IHtrCITlab {
     }
 
     public HTR getHTR(String om, String lm, String cm, String storageDir, String[] props) {
-        HTR htrDummy = new HTR(om, lm, cm);
+        HTR htrDummy = new HTR(om, lm, cm, props);
         int hash = htrDummy.hashCode();
         if (!htrs.containsKey(hash)) {
             ISNetwork network = getNetwork(om, cm);
-            ILangMod langMod = getLangMod(lm, network.getCharMap(), props);
+            ILangMod langMod = getLangMod(om, lm, network.getCharMap(), props);
             htrs.put(hash, new HTR(network, langMod, om, lm, cm, props));
         }
         HTR res = htrs.get(hash);
@@ -250,7 +282,7 @@ public class HTRParser implements IHtrCITlab {
                 LOG.error("in line {} ignore tags {}", textLine.getId(), text.getTags());
             }
 //            textEquivType.setConf(new Float(result.getSecond()));
-            LOG.info("decoded '" + result + "' for textline " + textLine.getId() + " with" + ((PropertyUtil.isPropertyTrue(props, Key.RAW) || !useDict(pathToLanguageModel)) ? "out" : "") + " language model .");
+            LOG.info("decoded '" + result + "' for textline " + textLine.getId() + " with" + (htr.isLM(props) ? "" : "out") + " language model .");
         }
         htr.finalizePage();
         PageXmlUtil.copyTextEquivLine2Region(xmlFile);
@@ -275,7 +307,7 @@ public class HTRParser implements IHtrCITlab {
 
     @Override
     public String getProvider() {
-        return MetadataUtil.getProvider("Gundram Leifert", "gundram.leifert@uni-rostock.de");
+        return MetadataUtil.getProvider("Gundram Leifert", "gundram.leifert@planet-ai.de");
     }
 
     @Override

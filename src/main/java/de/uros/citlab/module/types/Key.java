@@ -36,6 +36,13 @@ public class Key {
      * value = "path/file.txt" saves the file to the given path.
      */
     public static final String CREATE_LR = "create_lr";
+    /**
+     * use language resource to train internal N-gram.
+     * use value = "true" to try to load the language resource from HTR-folder.
+     * If value is set and != true: value = -path_to_text_resource-
+     * default: -not set-.
+     */
+    public static final String HTR_USE_LR = "use_lr";
     public static final String DEBUG = "debug";
     public static final String DEBUG_DIR = "debug_dir";
     public static final String DELETE = "delete";

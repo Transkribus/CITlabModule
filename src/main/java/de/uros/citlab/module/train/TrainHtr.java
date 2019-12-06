@@ -29,8 +29,6 @@ public class TrainHtr extends Observable implements ITrainHtr {
     private static final String INTERN_SPRNN = "net.sprnn";
     private static final String INTERN_SPRNN_BEST = "best_net.sprnn";
     public static final String EVENT_PRESENT_OBSERVABLE = "present_observable";
-    private static final String provider = "University of Rostock\nInstitute of Mathematics\nCITlab\nGundram Leifert\ngundram.leifert@uni-rostock.de";
-    private static final String name = TrainHtr.class.getName();
 
     public static class Status {
 
@@ -192,8 +190,7 @@ public class TrainHtr extends Observable implements ITrainHtr {
 
     @Override
     public String getToolName() {
-        return name;
-    }
+        return this.getClass().getSimpleName();}
 
     @Override
     public String getVersion() {
@@ -202,7 +199,7 @@ public class TrainHtr extends Observable implements ITrainHtr {
 
     @Override
     public String getProvider() {
-        return provider;
+        return MetadataUtil.getProvider("Gundram Leifert", "gundram.leifert@planet-ai.de");
     }
 
     @Override
