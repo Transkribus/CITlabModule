@@ -200,16 +200,17 @@ public class Text2ImageNoLineBreak extends ParamTreeOrganizer implements Runnabl
             args = al.getArgs();
         }
         String[] props = null;
-        props = PropertyUtil.setProperty(props, Key.T2I_HYPHEN, "6.0");
+//        props = PropertyUtil.setProperty(props, Key.T2I_HYPHEN, "6.0");
 //        props = PropertyUtil.setProperty(props, Key.T2I_HYPHEN_LANG, "DE");
-        props = PropertyUtil.setProperty(props, Key.T2I_JUMP_BASELINE, "10.0");
-        props = PropertyUtil.setProperty(props, Key.T2I_SKIP_WORD, "3.5");
-        props = PropertyUtil.setProperty(props, Key.T2I_SKIP_BASELINE, "0.4");
+//        props = PropertyUtil.setProperty(props, Key.T2I_JUMP_BASELINE, "10.0");
+//        props = PropertyUtil.setProperty(props, Key.T2I_SKIP_WORD, "3.5");
+//        props = PropertyUtil.setProperty(props, Key.T2I_SKIP_BASELINE, "0.4");
 //        props = PropertyUtil.setProperty(props, Key.T2I_MAX_COUNT, "10000000");
 //        props = PropertyUtil.setProperty(props, Key.T2I_BEST_PATHES, "200.0");
         props = PropertyUtil.setProperty(props, Key.T2I_THRESH, "0.0");
         props = PropertyUtil.setProperty(props, Key.DEBUG, "true");
         props = PropertyUtil.setProperty(props, Key.DEBUG_DIR, HomeDir.getFile("debug").getPath());
+        props = PropertyUtil.setProperty(props, Key.T2I_IGNORE_LB,"true");
 //        props = PropertyUtil.setProperty(props, "b2p", "true");
         props = PropertyUtil.setProperty(props, Key.STATISTIC, "true");
         Text2ImageNoLineBreak instance = new Text2ImageNoLineBreak(props);

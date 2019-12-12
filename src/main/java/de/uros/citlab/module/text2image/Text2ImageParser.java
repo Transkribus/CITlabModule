@@ -254,6 +254,7 @@ public class Text2ImageParser extends ParamSetOrganizer implements IText2Image {
 //        textAligner.setUpdateScheme(PathCalculatorGraph.UpdateScheme.ALL);
         textAligner.setNacOffset(0.0);
         textAligner.setThreshold(threshold);
+        textAligner.setCostAnyChar(4.0);
         if (PropertyUtil.isPropertyTrue(props, Key.DEBUG)) {
             File folder = PropertyUtil.hasProperty(props, Key.DEBUG_DIR)
                     ? new File(PropertyUtil.getProperty(props, Key.DEBUG_DIR))
