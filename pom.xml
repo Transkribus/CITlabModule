@@ -24,7 +24,7 @@
     <name>CITlabModule</name>
     <groupId>de.uros.citlab</groupId>
     <artifactId>module</artifactId>
-    <version>2.6.0</version>
+    <version>2.6.1</version>
     <packaging>jar</packaging>
     <parent>
         <groupId>de.uros.citlab</groupId>
@@ -173,6 +173,7 @@
         <dependency>
             <groupId>eu.transkribus</groupId>
             <artifactId>TranskribusCore</artifactId>
+            <version>0.7.0</version>
         </dependency>
         <dependency>
             <groupId>eu.transkribus</groupId>
@@ -231,7 +232,6 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -278,8 +278,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <scope>test</scope>
-            <!--<scope>test</scope>-->
+<!--            <scope>test</scope>-->
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>

@@ -1,5 +1,8 @@
 # Change Log
 
+# 2.6.1
+* bugfix T2I: use all transcripts of pageXML (instead of only special T2I-regions) when no transcripts are given
+
 # 2.6.0
 * feature LA: if regions overlap, baselines are will not be separated or deleted.
 * feature HTR(x): If the process gets as property "use_lr" = "true", a language resource in the HTR folder is assumed.

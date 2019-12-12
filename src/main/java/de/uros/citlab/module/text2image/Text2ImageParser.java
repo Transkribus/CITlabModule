@@ -10,6 +10,7 @@ import com.achteck.misc.types.ParamSetOrganizer;
 import de.planet.imaging.types.HybridImage;
 import de.uros.citlab.confmat.CharMap;
 import de.uros.citlab.errorrate.types.PathCalculatorGraph;
+import de.uros.citlab.errorrate.util.HeatMapUtil;
 import de.uros.citlab.errorrate.util.ObjectCounter;
 import de.uros.citlab.module.htr.HTRParser;
 import de.uros.citlab.module.htr.HTRParserPlus;
@@ -33,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -152,11 +154,7 @@ public class Text2ImageParser extends ParamSetOrganizer implements IText2Image {
         LOG.debug("load text references from pageXML");
         List<String> res = new LinkedList<>();
         for (PageStruct page : pages) {
-            for (TextLineType textLine : PageXmlUtil.getTextLines(page.getXml())) {
-                if (PageXmlUtil.isT2ITextLine(textLine, page.getXml())) {
-                    res.add(PageXmlUtil.getTextEquiv(textLine));
-                }
-            }
+            res.addAll(PageXmlUtil.getText(page.getXml()));
         }
         deleteEmptyEntries(res);
         if (ignoreHardLineBreaks) {
@@ -186,6 +184,9 @@ public class Text2ImageParser extends ParamSetOrganizer implements IText2Image {
         final List<PageStruct> pageExecution = new LinkedList<>();
         final List<ConfMat> confMats = new LinkedList<>();
         final Map<LineImage, HybridImage> lineMap = new LinkedHashMap<>();
+        if (pathToText == null) {
+            pathToText = images[0];
+        }
         Set<HybridImage> freeImages = new LinkedHashSet<>();
         for (int i = 0; i < pages.size(); i++) {
             final PageStruct page = pages.get(i);
@@ -260,7 +261,35 @@ public class Text2ImageParser extends ParamSetOrganizer implements IText2Image {
             folder.mkdirs();
             String name = new File(pathToText).getName();
             name = name.substring(0, name.lastIndexOf("."));
-            throw new RuntimeException("so far no export for debug images implemented");
+            final File file = new File(pathToText);
+            textAligner.setDynMatViewer(new PathCalculatorGraph.DynMatViewer() {
+                int i = 0;
+
+                @Override
+                public boolean callbackEnd(float[][] mat) {
+                    try {
+                        File file2 = new File(file + "_debug_" + i + ".png");
+                        i++;
+                        file2.getParentFile().mkdirs();
+                        ImageIO.write(HeatMapUtil.getHeatMap(mat, 7), "png", file2);
+                    } catch (IOException e) {
+                        com.achteck.misc.log.Logger.getLogger(Text2ImageParser.class).log(com.achteck.misc.log.Logger.WARN, "cannot save image " + file, e);
+                        return false;
+                    }
+                    return true;
+                }
+
+                @Override
+                public boolean callbackUpdate(double d, float[][] mat) {
+                    return false;
+                }
+
+                @Override
+                public int[] getSize(int[] actual) {
+                    return new int[]{Math.min(actual[0], 16384), Math.min(actual[1], 16384)};
+                }
+            });
+//            throw new RuntimeException("so far no export for debug images implemented");
 //            textAligner.setDynMatViewer(new PathCalculatorGraph.ImageExportDynMatViewer(new File(folder, name + ".png")));
         }
         if (maxCount > 0) {

@@ -119,7 +119,7 @@ public class Text2ImageNoLineBreak extends ParamTreeOrganizer implements Runnabl
             switch (textsSrc.size()) {
                 case 0:
                     LOG.info("in folder {} no txt-file found", folderSrc);
-                    continue;
+//                    continue;
                 case 1:
                     break;
                 default:
@@ -173,13 +173,13 @@ public class Text2ImageNoLineBreak extends ParamTreeOrganizer implements Runnabl
 //                    ImageUtil.write(imageBufferedImage, "jpg", new File(fileXmlTgt.getAbsoluteFile() + ".jpg"));
 //                }
             }
-            File textFile = textsSrc.get(0);
+            String textFile = textsSrc.isEmpty()?null:textsSrc.get(0).getAbsolutePath();
             if (htrName != null) {
                 text2image.matchCollection(
                         htrName,
                         lrName,
                         charMapName,
-                        textFile.getAbsolutePath(),
+                        textFile,
                         FileUtil.asStringList(imagesTgt),
                         FileUtil.asStringList(xmlsTgt),
                         folderStorage != null ? FileUtil.asStringList(storages) : null,
@@ -189,13 +189,14 @@ public class Text2ImageNoLineBreak extends ParamTreeOrganizer implements Runnabl
     }
 
     public static void main(String[] args) throws InvalidParameterException, MalformedURLException, IOException, JAXBException {
+        HomeDir.setPath("./");
         File folder = HomeDir.getFile("t2i");//folder containing images and PAGE-XML with baselines
         if (args.length == 0) {
             ArgumentLine al = new ArgumentLine();
-            al.addArgument("in", HomeDir.getFile("data/t2i_bar/raw/100"));
-            al.addArgument("out", HomeDir.getFile("/data/t2i_bar/t2i/100"));
-            al.addArgument("storage", HomeDir.getFile("/data/t2i_bar/storage/100"));
-            al.addArgument("htr", HomeDir.getFile("nets/tf_320/net.sprnn"));
+            al.addArgument("in", HomeDir.getFile("test"));
+            al.addArgument("out", HomeDir.getFile("testout"));
+//            al.addArgument("storage", HomeDir.getFile("/data/t2i_bar/storage/100"));
+            al.addArgument("htr", HomeDir.getFile("src/test/resources/test_htr/HTR/"));
             args = al.getArgs();
         }
         String[] props = null;
@@ -204,11 +205,11 @@ public class Text2ImageNoLineBreak extends ParamTreeOrganizer implements Runnabl
         props = PropertyUtil.setProperty(props, Key.T2I_JUMP_BASELINE, "10.0");
         props = PropertyUtil.setProperty(props, Key.T2I_SKIP_WORD, "3.5");
         props = PropertyUtil.setProperty(props, Key.T2I_SKIP_BASELINE, "0.4");
-        props = PropertyUtil.setProperty(props, Key.T2I_MAX_COUNT, "10000000");
-        props = PropertyUtil.setProperty(props, Key.T2I_BEST_PATHES, "200.0");
+//        props = PropertyUtil.setProperty(props, Key.T2I_MAX_COUNT, "10000000");
+//        props = PropertyUtil.setProperty(props, Key.T2I_BEST_PATHES, "200.0");
         props = PropertyUtil.setProperty(props, Key.T2I_THRESH, "0.0");
-//        props = PropertyUtil.setProperty(props, Key.DEBUG, "true");
-//        props = PropertyUtil.setProperty(props, Key.DEBUG_DIR, HomeDir.getFile("data/t2i_bar/debug").getPath());
+        props = PropertyUtil.setProperty(props, Key.DEBUG, "true");
+        props = PropertyUtil.setProperty(props, Key.DEBUG_DIR, HomeDir.getFile("debug").getPath());
 //        props = PropertyUtil.setProperty(props, "b2p", "true");
         props = PropertyUtil.setProperty(props, Key.STATISTIC, "true");
         Text2ImageNoLineBreak instance = new Text2ImageNoLineBreak(props);
