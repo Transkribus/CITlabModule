@@ -1,5 +1,8 @@
 # Change Log
 
+# 2.6.2
+* make parent 1.8
+
 # 2.6.1
 * bugfix T2I: use all transcripts of pageXML (instead of only special T2I-regions) when no transcripts are given
 

@@ -1,5 +1,6 @@
 package de.uros.citlab.module;
 
+import de.planet.imaging.types.HybridImage;
 import de.uros.citlab.module.baseline2polygon.B2PSeamMultiOriented;
 import de.uros.citlab.module.baseline2polygon.Baseline2PolygonParser;
 import de.uros.citlab.module.util.FileUtil;
@@ -42,8 +43,8 @@ public class TestLoadOpenCV {
     @Test
     public void testB2P_CV_64FC2() throws MalformedURLException {
         IBaseline2Polygon laParser = new Baseline2PolygonParser(B2PSeamMultiOriented.class.getName());
-
-        Image img = new Image(imgFile.toURI().toURL());
+        HybridImage hybridImage = HybridImage.newInstance(imgFile.toURI().toURL());
+        Image img = new Image(hybridImage.getAsOpenCVMatImage());
 
         try {
 

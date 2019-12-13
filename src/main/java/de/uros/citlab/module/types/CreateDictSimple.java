@@ -7,18 +7,18 @@ package de.uros.citlab.module.types;
 
 import com.achteck.misc.log.Logger;
 import com.achteck.misc.util.StringIO;
-import de.uros.citlab.tokenizer.categorizer.CategorizerWordDft;
-import de.uros.citlab.tokenizer.TokenizerCategorizer;
 import de.uros.citlab.errorrate.util.ObjectCounter;
-import eu.transkribus.interfaces.ITokenizer;
+import de.uros.citlab.tokenizer.TokenizerCategorizer;
 import de.uros.citlab.tokenizer.categorizer.CategorizerWordMergeGroups;
 import de.uros.citlab.tokenizer.interfaces.ICategorizer;
+import de.uros.citlab.tokenizer.interfaces.ITokenizer;
+import org.apache.commons.math3.util.Pair;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.commons.math3.util.Pair;
 
 /**
  * Description of CreateDict

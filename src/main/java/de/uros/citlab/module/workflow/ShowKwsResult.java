@@ -73,7 +73,7 @@ public class ShowKwsResult extends ParamTreeOrganizer {
                     int cnt = 0;
                     boolean imageAvail = false;
                     for (KWS.Entry entry : pos) {
-                        File image = new File(entry.getImage());
+                        File image = new File(entry.getPageID());
                         Polygon2DInt baseline = PolygonUtil.string2Polygon2DInt(entry.getBl());
 //                        LOG.log(Logger.INFO, new StdFrameAppender.AppenderContent(HybridImage.newInstance(image), String.format("%s:\"%s\":%.2f", image.getName(), keyWord.getKeyWord(), -Math.log(entry.getConf())), Arrays.asList(baseline)));
                         fr.addImage(HybridImage.newInstance(image), String.format("%s:\"%s\":%.2f", image.getName(), keyWord.getKeyWord(), -Math.log(entry.getConf())), Arrays.asList(baseline), String.format("%s:\"%s\":%.3f", image.getName(), keyWord.getKeyWord(), entry.getConf()));
@@ -100,11 +100,11 @@ public class ShowKwsResult extends ParamTreeOrganizer {
                     Collections.sort(pos, new Comparator<KWS.Entry>() {
                         @Override
                         public int compare(KWS.Entry o1, KWS.Entry o2) {
-                            int res = o1.getImage().compareTo(o2.getImage());
+                            int res = o1.getPageID().compareTo(o2.getPageID());
                             if (res != 0) {
                                 return res;
                             }
-                            return Double.compare(o1.getBaseLineKeyword().getBounds().getCenterX(), o2.getBaseLineKeyword().getBounds().getCenterX());
+                            return Double.compare(o1.getBaseLine().getBounds().getCenterX(), o2.getBaseLine().getBounds().getCenterX());
                         }
                     });
                     pos.add(null);
@@ -112,7 +112,7 @@ public class ShowKwsResult extends ParamTreeOrganizer {
                     List<Polygon2DInt> polygons = new LinkedList<>();
                     String confidences = "";
                     for (KWS.Entry entry : pos) {
-                        if (entry == null || !entry.getImage().equals(image)) {
+                        if (entry == null || !entry.getPageID().equals(image)) {
                             if (image != null) {
                                 fr.addImage(HybridImage.newInstance(image), String.format("%s:\"%s\":%s", new File(image).getName(), keyWord.getKeyWord(), confidences.trim()), polygons);
                                 polygons = new LinkedList<>();
@@ -121,7 +121,7 @@ public class ShowKwsResult extends ParamTreeOrganizer {
                             if (entry == null) {
                                 break;
                             }
-                            image = entry.getImage();
+                            image = entry.getPageID();
                         }
                         polygons.add(PolygonUtil.string2Polygon2DInt(entry.getBl()));
                         confidences += " " + String.format("%.3f", entry.getConf());
@@ -139,11 +139,11 @@ public class ShowKwsResult extends ParamTreeOrganizer {
                 Collections.sort(kws, new Comparator<Entry2>() {
                     @Override
                     public int compare(Entry2 o1, Entry2 o2) {
-                        int res = o1.entry.getImage().compareTo(o2.entry.getImage());
+                        int res = o1.entry.getPageID().compareTo(o2.entry.getPageID());
                         if (res != 0) {
                             return res;
                         }
-                        int res2 = Double.compare(o1.entry.getBaseLineKeyword().getBounds().getCenterX(), o2.entry.getBaseLineKeyword().getBounds().getCenterX());
+                        int res2 = Double.compare(o1.entry.getBaseLine().getBounds().getCenterX(), o2.entry.getBaseLine().getBounds().getCenterX());
                         if (res2 != 0) {
                             return res2;
                         }
@@ -152,10 +152,10 @@ public class ShowKwsResult extends ParamTreeOrganizer {
                 });
                 HashMap<String, List<Entry2>> map = new HashMap<>();
                 for (Entry2 entry : kws) {
-                    List<Entry2> get = map.get(entry.entry.getImage());
+                    List<Entry2> get = map.get(entry.entry.getPageID());
                     if (get == null) {
                         get = new LinkedList<>();
-                        map.put(entry.entry.getImage(), get);
+                        map.put(entry.entry.getPageID(), get);
                     }
                     get.add(entry);
                 }
@@ -171,8 +171,8 @@ public class ShowKwsResult extends ParamTreeOrganizer {
                     for (Entry2 entry : matches) {
                         Polygon2DInt string2Polygon2DInt = PolygonUtil.string2Polygon2DInt(entry.entry.getBl());
                         polygons.add(PolygonUtil.string2Polygon2DInt(entry.entry.getBl()));
-                        if (!entry.entry.getImage().equals(lastImage)) {
-                            lastImage = entry.entry.getImage();
+                        if (!entry.entry.getPageID().equals(lastImage)) {
+                            lastImage = entry.entry.getPageID();
                             img = HybridImage.newInstance(lastImage);
                         }
                         sb.append("'").append(entry.keyword).append("' ");

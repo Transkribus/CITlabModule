@@ -29,8 +29,10 @@ import eu.transkribus.interfaces.IKeywordSpotter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -459,11 +461,11 @@ public class KWSParser extends Observable implements IKeywordSpotter {
 
     }
 
-    private static String getPolygonPart(Polygon2DInt baseline, double beginRel, double endRel) {
+    private static Polygon getPolygonPart(Polygon2DInt baseline, double beginRel, double endRel) {
         Polygon2DInt blowUp = PolygonUtil.blowUp(baseline);
         int begin = (int) Math.floor(beginRel * blowUp.npoints);
         int end = Math.min(blowUp.npoints, (int) Math.ceil(endRel * blowUp.npoints)) - 1;
-        return PolygonUtil.polygon2String(new Polygon2DInt(new int[]{blowUp.xpoints[begin], blowUp.xpoints[end]}, new int[]{blowUp.ypoints[begin], blowUp.ypoints[end]}, 2));
+        return new Polygon(new int[]{blowUp.xpoints[begin], blowUp.xpoints[end]}, new int[]{blowUp.ypoints[begin], blowUp.ypoints[end]}, 2);
     }
 
     private KWS.Entry getEntry(ConfMat confMat, double conf, int start, int end) {
@@ -475,7 +477,12 @@ public class KWSParser extends Observable implements IKeywordSpotter {
 //                                Polygon2DInt baseline = container.getBaseline(confMat);
         String lineID = container.getLineID(confMat);
 //    private static KWS.Entry getEntry(ConfMat cm, String lineID, double absCosts, double relCosts, double conf, double relStart, double relEnd, Polygon2DInt polygon, String pageId) {
-        return new KWS.Entry(conf, lineID, getPolygonPart(baseline, relStart, relEnd), pageID);
+        return new KWS.Entry(
+                conf,
+                lineID,
+                pageID,
+                getPolygonPart(baseline, relStart, relEnd),
+                null);
     }
 
     private boolean loadConfMats(String[] imagesIn, String[] storageIn, boolean upper, long cacheSize) {

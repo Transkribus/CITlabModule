@@ -9,6 +9,7 @@ import com.achteck.misc.exception.InvalidParameterException;
 import com.achteck.misc.param.ParamSet;
 import com.achteck.misc.types.ParamAnnotation;
 import com.achteck.misc.types.ParamTreeOrganizer;
+import de.planet.imaging.types.HybridImage;
 import de.uros.citlab.module.baseline2polygon.Baseline2PolygonParser;
 import de.uros.citlab.module.htr.HTRParser;
 import de.uros.citlab.module.htr.HTRParserPlus;
@@ -152,7 +153,8 @@ public class Apply2Folder_ML extends ParamTreeOrganizer {
                     FileUtils.copyFile(srcImg, tgtImg);
                 }
             }
-            Image img = new Image(tgtImg.toURI().toURL());
+            HybridImage hi = HybridImage.newInstance(tgtImg.toURI().toURL());
+            Image img = new Image(hi.getAsOpenCVMatImage());
 
 //            File parent = outImg.getParentFile();
             File srcXml = PageXmlUtil.getXmlPath(srcImg, false);
@@ -220,7 +222,7 @@ public class Apply2Folder_ML extends ParamTreeOrganizer {
 //        args=al.getArgs();
 
 //        String folder = "/home/tobias/devel/projects/CitlabModule/raw4/", folderOut = "/home/tobias/devel/projects/CitlabModule/out/", htr = "", lr = "", la = "", b2p = "";
-        String folder = "", folderOut = "", htr = "", lr = "", la = "", b2p = "";
+        String folder = "test2", folderOut = "test2out", htr = "", lr = "", la = "", b2p = "";
         String[] props = null;
 //        props = PropertyUtil.setProperty(props, Key.LA_DELETESCHEME, LayoutAnalysisURO_ML.DEL_REGIONS);
 //        props = PropertyUtil.setProperty(props, Key.LA_ROTSCHEME, LayoutAnalysisURO_ML.ROT_HOM);
@@ -238,7 +240,7 @@ public class Apply2Folder_ML extends ParamTreeOrganizer {
 //        System.out.println(Arrays.toString(remainingArgumentList));
         props = ArgumentLine.getPropertiesFromArgs(remainingArgumentList, props);
         LOG.info("set properties {}", Arrays.toString(props)); //        System.out.println("==>" + Arrays.toString(props));
-        instance = new Apply2Folder_ML(htr, lr, la, folder, folderOut, b2p, false, true, props);
+        instance = new Apply2Folder_ML(htr, lr, la, folder, folderOut, b2p, true, true, props);
         ps = new ParamSet();
         ps.setCommandLineArgs(args);    // allow early parsing
         ps = instance.getDefaultParamSet(ps);

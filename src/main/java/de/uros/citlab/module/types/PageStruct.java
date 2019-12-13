@@ -1,5 +1,6 @@
 package de.uros.citlab.module.types;
 
+import de.planet.imaging.types.HybridImage;
 import de.uros.citlab.module.util.PageXmlUtil;
 import eu.transkribus.core.model.beans.pagecontent.PcGtsType;
 import eu.transkribus.interfaces.types.Image;
@@ -53,7 +54,7 @@ public class PageStruct {
     public Image getImg() {
         if (img == null) {
             try {
-                img = new Image(pathImg.toURI().toURL());
+                img = new Image(HybridImage.newInstance(pathImg.toURI().toURL()).getAsOpenCVMatImage());
             } catch (MalformedURLException ex) {
                 throw new RuntimeException(ex);
             }

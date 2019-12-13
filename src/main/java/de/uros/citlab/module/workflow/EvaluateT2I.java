@@ -132,6 +132,16 @@ public class EvaluateT2I extends ParamTreeOrganizer implements Runnable {
                 public Polygon getBaseline() {
                     return baseline;
                 }
+
+                @Override
+                public Polygon getPolygon() {
+                    return line.getCoords() == null ? null : PolygonUtil.getPolygon(line);
+                }
+
+                @Override
+                public String getId() {
+                    return line.getId();
+                }
             });
         }
         return res;

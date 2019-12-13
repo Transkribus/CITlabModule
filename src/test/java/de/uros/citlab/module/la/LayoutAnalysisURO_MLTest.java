@@ -44,7 +44,7 @@ public class LayoutAnalysisURO_MLTest {
     @Test
     public void process() throws MalformedURLException {
         LayoutAnalysisURO_ML la = new LayoutAnalysisURO_ML(null);
-        Image img = new Image(fileImage.toURL());
+        Image img = new Image(HybridImage.newInstance(fileImage.toURL()).getAsOpenCVMatImage());
         String[] schemes = new String[]{LayoutAnalysisURO_ML.DEL_REGIONS, null, LayoutAnalysisURO_ML.DEL_LINES};
         for (String scheme : schemes) {
             PcGtsType unmarshal = PageXmlUtil.unmarshal(fileXML);

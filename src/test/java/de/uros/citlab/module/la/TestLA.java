@@ -70,7 +70,7 @@ public class TestLA {
             String testFileImgBase = testFileImg.substring(0, testFileImg.lastIndexOf("."));
             Image image = null;
             try {
-                image = new Image(ImageUtils.convertToBufferedImage(testImgFile.toURI().toURL()));
+                image = new Image(HybridImage.newInstance(testImgFile.toURI().toURL()).getAsOpenCVMatImage());
             } catch (IOException ex) {
                 LOG.log(Logger.ERROR, ex);
                 Assert.fail("creating test szenario did not work: (load image) " + ex.getMessage());

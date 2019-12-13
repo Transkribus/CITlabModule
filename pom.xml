@@ -24,12 +24,12 @@
     <name>CITlabModule</name>
     <groupId>de.uros.citlab</groupId>
     <artifactId>module</artifactId>
-    <version>2.6.1</version>
+    <version>2.6.2</version>
     <packaging>jar</packaging>
     <parent>
         <groupId>de.uros.citlab</groupId>
         <artifactId>parent_pom</artifactId>
-        <version>1.7</version>
+        <version>1.8</version>
     </parent>
 
     <dependencies>
@@ -187,42 +187,33 @@
             <groupId>eu.transkribus</groupId>
             <artifactId>TranskribusInterfaces</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.twelvemonkeys.imageio</groupId>
-            <artifactId>imageio-tiff</artifactId>
-        </dependency>
 
         <!--CITLAB-->
         <dependency>
             <groupId>de.uros.citlab</groupId>
             <artifactId>errorrate</artifactId>
-            <version>5.3.0</version>
         </dependency>
         <dependency>
             <groupId>de.uros.citlab</groupId>
             <artifactId>tokenizer</artifactId>
-            <version>1.1.0</version>
         </dependency>
         <dependency>
             <groupId>de.uros.citlab</groupId>
             <artifactId>confmat</artifactId>
-            <version>1.1.1</version>
         </dependency>
         <dependency>
             <groupId>de.uros.citlab</groupId>
             <artifactId>segmentation</artifactId>
-            <version>1.1.0</version>
             <!--<scope>provided</scope>-->
         </dependency>
         <dependency>
             <groupId>de.uros.citlab</groupId>
             <artifactId>textalignment</artifactId>
-            <version>1.1.1</version>
         </dependency>
-        <dependency>
-            <groupId>de.uros.citlab</groupId>
-            <artifactId>languagemodel</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>de.uros.citlab</groupId>-->
+<!--            <artifactId>languagemodel</artifactId>-->
+<!--        </dependency>-->
 
         <!--LOGGING-->
         <dependency>

@@ -307,7 +307,7 @@ public class TrainHtrPlusTest {
 
         System.out.println("runHTR");
         HTRParserPlus parser = new HTRParserPlus();
-        Image img = new Image(TestFiles.getTestFiles().get(0).toURI().toURL());
+        Image img = new Image(HybridImage.newInstance(TestFiles.getTestFiles().get(0).toURI().toURL()).getAsOpenCVMatImage());
         PcGtsType page = PageXmlUtil.unmarshal(PageXmlUtil.getXmlPath(TestFiles.getTestFiles().get(0)));
         parser.process(new File(TestFiles.getPrefix(), "test_htr/HTR").getAbsolutePath(),
                 null,
