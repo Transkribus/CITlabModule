@@ -198,20 +198,23 @@ public class Text2ImageParser extends ParamSetOrganizer implements IText2Image {
                 LOG.info("loading image over transkribus throws error - use own method (errror = " + ex.getMessage() + ")");
                 hi = ImageUtil.getHybridImage(page.getPathImg(), true);
             }
-            List<TextRegionType> textRegions = PageXmlUtils.getTextRegions(page.getXml());
             HTR htr = getHTR(pathToOpticalModel, pathToCharacterMap, storage);
-            for (TextRegionType textRegion : textRegions) {
+            for (TextRegionType textRegion : PageXmlUtils.getTextRegions(page.getXml())) {
                 List<TextLineType> linesInRegion1 = textRegion.getTextLine();
                 linesInRegion1.removeIf(textLineType -> PageXmlUtil.isT2ITextLine(textLineType, page.getXml()));
                 for (TextLineType textLineType : linesInRegion1) {
                     LineImage lineImage = new LineImage(hi, textLineType, textRegion);
                     lineImage.deleteTextEquiv();
 //                Display.addPanel(new DisplayPlanet(subImage),lineImage.getTextLine().getId());
-                    ConfMat confMat = htr.getConfMat(lineImage, props);
-                    linesExecution.add(lineImage);
-                    pageExecution.add(page);
-                    lineMap.put(lineImage, hi);
-                    confMats.add(confMat);
+                    try {
+                        ConfMat confMat = htr.getConfMat(lineImage, props);
+                        linesExecution.add(lineImage);
+                        pageExecution.add(page);
+                        lineMap.put(lineImage, hi);
+                        confMats.add(confMat);
+                    } catch (RuntimeException ex) {
+                        LOG.warn("ignore text line {} of page {} in T2I", textLineType.getId(), page.getXml().getPcGtsId());
+                    }
                 }
             }
             freeImages.add(hi);

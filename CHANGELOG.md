@@ -1,5 +1,8 @@
 # Change Log
 
+# 2.6.3
+* bugfix T2I: also ignore small regions in T2I, which are also ignored in HTR-jobs
+
 # 2.6.2
 * make parent 1.8
 
