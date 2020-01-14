@@ -277,6 +277,19 @@
             <!--<scope>test</scope>-->
         </dependency>
     </dependencies>
+    
+    <!-- CITlabPermissivePom excludes all dependencies of TranskribusInterfaces which breaks the tests. Override dependency with scope=provided -->
+    <dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>eu.transkribus</groupId>
+				<artifactId>TranskribusInterfaces</artifactId>
+				<version>0.0.7</version>
+				<scope>provided</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+    
     <!--<build>-->
         <!--<plugins>-->
             <!--<plugin>-->
