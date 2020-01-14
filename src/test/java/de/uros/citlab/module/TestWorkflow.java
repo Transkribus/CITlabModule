@@ -228,7 +228,7 @@ public class TestWorkflow {
                 double corRateB2P = ((double) cor) / gt * 100;
 //                    System.out.println(map);
                 System.out.println(String.format("correct with B2P = %.2f%s", corRateB2P, "%"));
-                Assert.assertEquals("correct rate changed with b2p and without lm", 46.23430962343097, corRateB2P, 0.1);
+                Assert.assertEquals("correct rate changed with b2p and without lm", 43.09623430962343, corRateB2P, 0.1);
             }
             {
                 String reco = PageXmlUtils.getFulltextFromLines(PageXmlUtil.unmarshal(testXmlFile_LA_HTR_LM));
@@ -240,7 +240,7 @@ public class TestWorkflow {
                 double corRateB2P = ((double) cor) / gt * 100;
 //                    System.out.println(map);
                 System.out.println(String.format("correct with B2P and with n-gram = %.2f%s", corRateB2P, "%"));
-                Assert.assertEquals("correct rate changed without b2p and with n-gram language model", 55.85774058577406, corRateB2P, 0.1);
+                Assert.assertEquals("correct rate changed without b2p and with n-gram language model", 54.60251046025104, corRateB2P, 0.1);
             }
 //            Assert.assertEquals("htr should benefit from B2P", corRate + Math.abs(corRate - corRateB2P), corRateB2P, Math.abs(corRate - corRateB2P));
         }
