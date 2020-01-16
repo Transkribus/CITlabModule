@@ -155,6 +155,9 @@ public class LayoutAnalysisURO_ML implements ILayoutAnalysis, Serializable {
                         if (PageXmlUtil.isT2ITextRegion(aTextReg, xmlFile)) {
                             continue;
                         }
+                        if (ids != null && ArrayUtil.linearSearch(ids, aTextReg.getId()) >= 0) {
+                        	continue;
+                        }
                         List<TextLineType> textLine = aTextReg.getTextLine();
                         if (!textLine.isEmpty()) {
                             LOG.debug("delete " + textLine.size() + " text lines in TextRegion " + aTextReg.getId());
