@@ -1,5 +1,11 @@
 # Change Log
 
+# 2.6.5
+* pull request #2 of Transkribus
+
+# 2.6.4
+* pull request #1 of Transkribus
+
 # 2.6.3
 * bugfix T2I: also ignore small regions in T2I, which are also ignored in HTR-jobs
 
