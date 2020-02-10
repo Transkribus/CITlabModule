@@ -33,6 +33,8 @@ import java.util.*;
  * @author tobi
  */
 public class LayoutAnalysisURO_ML implements ILayoutAnalysis, Serializable {
+	
+	public static final boolean ENABLE_T2I_REGIONS = false;
 
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LoggerFactory.getLogger(LayoutAnalysisURO_ML.class.getName());
@@ -125,10 +127,14 @@ public class LayoutAnalysisURO_ML implements ILayoutAnalysis, Serializable {
         PageType page = xmlFile.getPage();
         List<TrpRegionType> globRegs = page.getTextRegionOrImageRegionOrLineDrawingRegion();
         List<TextRegionType> globTextRegs = PageXmlUtils.getTextRegions(xmlFile);
-        TextRegionType t2ITextRegion = PageXmlUtil.getT2ITextRegion(globTextRegs, xmlFile);
-        if (t2ITextRegion != null) {
-            globRegs.remove(t2ITextRegion);
-            globTextRegs.remove(t2ITextRegion);
+        
+        TextRegionType t2ITextRegion = null;
+        if (ENABLE_T2I_REGIONS) {
+	        t2ITextRegion = PageXmlUtil.getT2ITextRegion(globTextRegs, xmlFile);
+	        if (t2ITextRegion != null) {
+	            globRegs.remove(t2ITextRegion);
+	            globTextRegs.remove(t2ITextRegion);
+	        }
         }
 //        List<TextRegionType> globTextRegs = PageXmlUtils.getTextRegions(xmlFile);
         String deleteScheme = PropertyUtil.getProperty(propCur, Key.LA_DELETESCHEME);
@@ -152,9 +158,11 @@ public class LayoutAnalysisURO_ML implements ILayoutAnalysis, Serializable {
                 case DEL_LINES:
                     //If Flag is set, delete all TextLines in given TextRegions
                     for (TextRegionType aTextReg : globTextRegs) {
-                        if (PageXmlUtil.isT2ITextRegion(aTextReg, xmlFile)) {
-                            continue;
-                        }
+                    	if (ENABLE_T2I_REGIONS) {
+	                        if (PageXmlUtil.isT2ITextRegion(aTextReg, xmlFile)) {
+	                            continue;
+	                        }
+                    	}
                         if (ids != null && ArrayUtil.linearSearch(ids, aTextReg.getId()) < 0) {
                         	continue;
                         }
