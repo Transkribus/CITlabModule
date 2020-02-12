@@ -207,7 +207,7 @@ public class HTRParserPlus extends Observable implements IHtrCITlab {
 //            textEquivType.setConf(new Float(result.getSecond()));
                 LOG.info("decoded '" + result + "' for textline " + textLine.getId() + " with" + (htr.isLM(props) ? "out" : "") + " language model .");
             } catch (RuntimeException ex) {
-                notifyObservers(new ErrorNotification(xmlFile, lineImage.getTextLine().getId(), ex, TrainHtrPlus.class));
+                notifyObservers(new ErrorNotification(xmlFile, lineImage.getTextLine().getId(), ex, HTRParserPlus.class));
 //                PageXmlUtil.deleteCustomTags(textLine, ReadingOrderTag.TAG_NAME);
 //                PageXmlUtil.setTextEquiv(textLine, "");
             } catch (OutOfMemoryError ex) {
@@ -215,7 +215,7 @@ public class HTRParserPlus extends Observable implements IHtrCITlab {
                 LOG.error("OutOfMemoryError image=" + imgPath + " lineid=" + textLine.getId());
                 SysResourcesUtil.logMemUsage(LOG, Level.ERROR, true);
                 System.gc();
-                notifyObservers(new ErrorNotification(xmlFile, lineImage.getTextLine().getId(), ex, TrainHtrPlus.class));
+                notifyObservers(new ErrorNotification(xmlFile, lineImage.getTextLine().getId(), ex, HTRParserPlus.class));
 //                PageXmlUtil.deleteCustomTags(textLine, ReadingOrderTag.TAG_NAME);
 //                PageXmlUtil.setTextEquiv(textLine, "");
             }
