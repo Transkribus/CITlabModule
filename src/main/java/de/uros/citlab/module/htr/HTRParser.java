@@ -215,12 +215,13 @@ public class HTRParser implements IHtrCITlab {
     }
 
     public HTR getHTR(String om, String lm, String cm, String storageDir, String[] props) {
-        HTR htrDummy = new HTR(om, lm, cm, props);
+    	String[] htrProps = HTRParserPlus.extractHtrProperties(props);
+        HTR htrDummy = new HTR(om, lm, cm, htrProps);
         int hash = htrDummy.hashCode();
         if (!htrs.containsKey(hash)) {
             ISNetwork network = getNetwork(om, cm);
-            ILangMod langMod = getLangMod(om, lm, network.getCharMap(), props);
-            htrs.put(hash, new HTR(network, langMod, om, lm, cm, props));
+            ILangMod langMod = getLangMod(om, lm, network.getCharMap(), htrProps);
+            htrs.put(hash, new HTR(network, langMod, om, lm, cm, htrProps));
         }
         HTR res = htrs.get(hash);
         if (storageDir == null || storageDir.isEmpty()) {
