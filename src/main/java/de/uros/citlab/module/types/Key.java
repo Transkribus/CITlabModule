@@ -68,7 +68,7 @@ public class Key {
     /**
      * if Value is set, save htr ConfMatContainer to this file name (instead of container.bin)
      */
-    public static final String HTR_CONFMAT_CONTAINER_FILENAME ="";
+    public static final String HTR_CONFMAT_CONTAINER_FILENAME ="ConfMatOutFilename";
 
     /**
      * path to a temporal folder which is used to save temporarily important
