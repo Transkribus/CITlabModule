@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author gundram
@@ -125,12 +126,16 @@ public class HTRParserPlus extends Observable implements IHtrCITlab {
     }
 
     public HTR getHTR(String om, String lm, String cm, String storageDir, String[] props) {
-        HTR htrDummy = new HTR(om, lm, cm, props);
+    	String[] htrProps = extractHtrProperties(props);
+        HTR htrDummy = new HTR(om, lm, cm, htrProps);
         int hash = htrDummy.hashCode();
         if (!htrs.containsKey(hash)) {
             ISNetwork network = getNetwork(om, cm);
-            ILangMod langMod = HTRParser.getLangMod(om, lm, network.getCharMap(), props);
-            htrs.put(hash, new HTR(network, langMod, om, lm, cm, props));
+            ILangMod langMod = HTRParser.getLangMod(om, lm, network.getCharMap(), htrProps);
+            htrs.put(hash, new HTR(network, langMod, om, lm, cm, htrProps));
+            LOG.info("Loaded new HTR. HTR cache now contains {} entries", htrs.size());
+        } else {
+        	LOG.debug("HTR already loaded. Retrieving instance from cache.");
         }
         HTR res = htrs.get(hash);
         if (storageDir == null || storageDir.isEmpty()) {
@@ -146,6 +151,21 @@ public class HTRParserPlus extends Observable implements IHtrCITlab {
         return res;
     }
 
+    /**
+	 * Create a copy of the properties without entries regarding the page to be processed, e.g. the ConfMat container output filename.
+	 * Not removing it will cause a {@link htrs} cache entry for each page processed with this parser instance, as it will affect the hashCode used as key in the map.
+     * @param props
+     * @return
+     */
+    static String[] extractHtrProperties(String[] props) {
+    	if(props == null) {
+    		return null;
+    	}
+    	String[] htrProps = PropertyUtil.setProperty(props, Key.HTR_CONFMAT_CONTAINER_FILENAME, null);
+    	LOG.debug("Properties argument: {}", Arrays.stream(props).collect(Collectors.joining(", ", "[ ", " ]")));
+    	LOG.debug("HTR Properties: {}", Arrays.stream(htrProps).collect(Collectors.joining(", ", "[ ", " ]")));
+    	return htrProps;
+	}
 
     private static boolean useDict(String lm) {
         return lm != null && !lm.isEmpty();
