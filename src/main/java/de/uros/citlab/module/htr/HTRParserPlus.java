@@ -153,7 +153,7 @@ public class HTRParserPlus extends Observable implements IHtrCITlab {
 
     /**
 	 * Create a copy of the properties without entries regarding the page to be processed, e.g. the ConfMat container output filename.
-	 * Not removing it will cause a {@link htrs} cache entry for each page processed with this parser instance, as it will affect the hashCode used as key in the map.
+	 * Not removing it will cause a {@link #htrs} cache entry for each page processed with this parser instance, as it will affect the hashCode used as key in the map.
      * @param props
      * @return
      */
