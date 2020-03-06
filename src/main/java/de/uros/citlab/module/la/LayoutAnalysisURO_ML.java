@@ -24,9 +24,13 @@ import eu.transkribus.interfaces.ILayoutAnalysis;
 import eu.transkribus.interfaces.types.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tensorflow.framework.ConfigProto;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.util.*;
 
 /**
@@ -94,6 +98,29 @@ public class LayoutAnalysisURO_ML implements ILayoutAnalysis, Serializable {
             if (PropertyUtil.isPropertyTrue(props, Key.LA_SINGLECORE)) {
                 configPath = singleConfigPath;
             }
+            String laConfigPath = PropertyUtil.getProperty(props, Key.LA_CONFIG_PATH);
+            if (laConfigPath != null) {
+            	LOG.info(Key.LA_CONFIG_PATH+" set to: "+laConfigPath);
+            	configPath = laConfigPath;
+            }
+            if (true) { // test on-the-fly generation of config file
+//            	File configOutFile = new File("laConfigTest.bin");
+            	try {
+	            	File configOutFile = Files.createTempFile("la_config_", ".bin").toFile();
+	            	LOG.info("Using on-the-fly la config at: "+configOutFile.getAbsolutePath());
+	            	ConfigProto.newBuilder()
+	            	        .setIntraOpParallelismThreads(2)
+	            	        .setInterOpParallelismThreads(2)
+	            	        .setUsePerSessionThreads(true)
+	            	        .putDeviceCount("GPU", 0)
+	            	        .build()
+	            	        .writeTo(new FileOutputStream(configOutFile));
+	            	configPath = configOutFile.getAbsolutePath();
+            	} catch (IOException e) {
+            		throw new RuntimeException(e);
+            	}
+            }
+            
             if (impl != null) {
                 LOG.warn("network '{}' was already loaded, load new network '{}'.", netPath, netPathNew);
             }
@@ -817,4 +844,19 @@ public class LayoutAnalysisURO_ML implements ILayoutAnalysis, Serializable {
             }
         }
     }
+    
+    public static void main(String[] args) throws Exception {
+    	
+    	File configOutFile = new File("laConfigTest.bin");
+    	ConfigProto.newBuilder()
+    	        .setIntraOpParallelismThreads(2)
+    	        .setInterOpParallelismThreads(2)
+    	        .setUsePerSessionThreads(true)
+    	        .putDeviceCount("GPU", 0)
+    	        .build()
+    	        .writeTo(new FileOutputStream(configOutFile));
+//    	        .toByteArray();
+    	LOG.info("done");
+    	
+	}
 }

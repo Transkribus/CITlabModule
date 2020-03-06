@@ -209,6 +209,8 @@ public class Key {
      * true - Tensorflow is allowed to use just one core.
      */
     public static final String LA_SINGLECORE = "la_single_core";
+    
+    public static final String LA_CONFIG_PATH = "la_config_path";
 
     /**
      * default: within a given TextRegion/CellRegion DONT use Seperators, if no
