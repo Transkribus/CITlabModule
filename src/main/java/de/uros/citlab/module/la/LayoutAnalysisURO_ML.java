@@ -47,6 +47,7 @@ public class LayoutAnalysisURO_ML implements ILayoutAnalysis, Serializable {
     private final String netPath1 = "/net_tf/LA73_249_0mod360.pb";
     private final String netPath2 = "/net_tf/LA76_249_0mod90.pb";
     private final String singleConfigPath = "/net_tf/singleThread.conf";
+    private final String configTestPath = "/net_tf/configTest.conf";
 
     private String configPath = "";
     private String netPath = null;
@@ -98,12 +99,17 @@ public class LayoutAnalysisURO_ML implements ILayoutAnalysis, Serializable {
             if (PropertyUtil.isPropertyTrue(props, Key.LA_SINGLECORE)) {
                 configPath = singleConfigPath;
             }
+            
             String laConfigPath = PropertyUtil.getProperty(props, Key.LA_CONFIG_PATH);
             if (laConfigPath != null) {
             	LOG.info(Key.LA_CONFIG_PATH+" set to: "+laConfigPath);
             	configPath = laConfigPath;
             }
-            if (true) { // test on-the-fly generation of config file
+            if (PropertyUtil.isPropertyTrue(props, Key.LA_TEST_CONFIG)) {
+            	configPath = configTestPath;
+            }
+            LOG.info("configPath = "+configPath);
+            if (false) { // test on-the-fly generation of config file
 //            	File configOutFile = new File("laConfigTest.bin");
             	try {
 	            	File configOutFile = Files.createTempFile("la_config_", ".bin").toFile();
@@ -847,7 +853,8 @@ public class LayoutAnalysisURO_ML implements ILayoutAnalysis, Serializable {
     
     public static void main(String[] args) throws Exception {
     	
-    	File configOutFile = new File("laConfigTest.bin");
+//    	File configOutFile = new File("laConfigTest.bin");
+    	File configOutFile = new File("configTest.conf");
     	ConfigProto.newBuilder()
     	        .setIntraOpParallelismThreads(2)
     	        .setInterOpParallelismThreads(2)

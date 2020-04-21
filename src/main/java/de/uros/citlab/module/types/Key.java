@@ -209,6 +209,7 @@ public class Key {
      * true - Tensorflow is allowed to use just one core.
      */
     public static final String LA_SINGLECORE = "la_single_core";
+    public static final String LA_TEST_CONFIG = "la_test_config";
     
     public static final String LA_CONFIG_PATH = "la_config_path";
 

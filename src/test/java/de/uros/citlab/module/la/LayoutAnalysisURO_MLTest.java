@@ -59,6 +59,7 @@ public class LayoutAnalysisURO_MLTest {
             }
             String[] strings = PropertyUtil.setProperty(null, Key.LA_ROTSCHEME, LayoutAnalysisURO_ML.ROT_HETRO);
             strings = PropertyUtil.setProperty(strings, Key.LA_DELETESCHEME, scheme);
+            strings = PropertyUtil.setProperty(strings, Key.LA_TEST_CONFIG, "true");
             int sizeBefore = unmarshal.getPage().getTextRegionOrImageRegionOrLineDrawingRegion().size();
             boolean process = la.process(
                     img,
