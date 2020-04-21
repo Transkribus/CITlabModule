@@ -106,7 +106,8 @@ public class LayoutAnalysisURO_ML implements ILayoutAnalysis, Serializable {
             	configPath = laConfigPath;
             }
             if (PropertyUtil.isPropertyTrue(props, Key.LA_TEST_CONFIG)) {
-            	configPath = configTestPath;
+		String prefix="/home/sebastian/workspace/CITlabModule/src/main/resources";
+            	configPath = prefix+configTestPath;
             }
             LOG.info("configPath = "+configPath);
             if (false) { // test on-the-fly generation of config file
@@ -131,6 +132,7 @@ public class LayoutAnalysisURO_ML implements ILayoutAnalysis, Serializable {
                 LOG.warn("network '{}' was already loaded, load new network '{}'.", netPath, netPathNew);
             }
             netPath = netPathNew;
+	    LOG.info("netath = "+netPath);
             impl = new CITlab_LA_ML(netPath, configPath);
             name = netPath + File.pathSeparator + impl.getClass().getName();
         }
