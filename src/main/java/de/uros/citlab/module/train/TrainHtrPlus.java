@@ -5,27 +5,52 @@
  */
 package de.uros.citlab.module.train;
 
-import com.achteck.misc.param.ParamSet;
-import com.achteck.misc.util.IO;
-import de.planet.itrtech.reco.IImagePreProcess;
-import de.planet.ocrtech.normalization.shape.SizeNormalizationUtil;
-import de.planet.reco.ImagePreprocModules;
-import de.planet.reco.RecoGlobals;
-import de.planet.reco.preproc.*;
-import de.planet.reco.preproc.util.ResizeUtil.Algorithm;
-import de.uros.citlab.module.types.ErrorNotification;
-import de.uros.citlab.module.types.Key;
-import de.uros.citlab.module.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Random;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.achteck.misc.param.ParamSet;
+import com.achteck.misc.util.IO;
+
+import de.planet.itrtech.reco.IImagePreProcess;
+import de.planet.ocrtech.normalization.shape.SizeNormalizationUtil;
+import de.planet.reco.ImagePreprocModules;
+import de.planet.reco.RecoGlobals;
+import de.planet.reco.preproc.BasicMainBodyNormalizer;
+import de.planet.reco.preproc.BasicShapeNormalizer;
+import de.planet.reco.preproc.COGLShapeNormalizer;
+import de.planet.reco.preproc.ContrastNormalizer2;
+import de.planet.reco.preproc.ContrastNormalizer6;
+import de.planet.reco.preproc.Cropper;
+import de.planet.reco.preproc.MainBodyNormalizer2;
+import de.planet.reco.preproc.MaskRemover;
+import de.planet.reco.preproc.SizeNormalizer;
+import de.planet.reco.preproc.SizeNormalizerSimple;
+import de.planet.reco.preproc.SlantNormalizer;
+import de.planet.reco.preproc.util.ResizeUtil.Algorithm;
+import de.uros.citlab.module.types.ErrorNotification;
+import de.uros.citlab.module.types.Key;
+import de.uros.citlab.module.util.CharMapUtil;
+import de.uros.citlab.module.util.FileUtil;
+import de.uros.citlab.module.util.IOUtil;
+import de.uros.citlab.module.util.PropertyUtil;
+import de.uros.citlab.module.util.PythonUtil;
+import de.uros.citlab.module.util.TrainDataUtil;
+import eu.transkribus.core.util.SysUtils;
 
 /**
  * @author gundram
@@ -658,6 +683,15 @@ public class TrainHtrPlus extends TrainHtr {
                 listener.handleError(line);
             }
         }
+        
+        @Override
+        public void attach(Process process) {
+        	Long aLong = SysUtils.processId(process);
+            if (aLong != null) {
+                setProcessID(aLong);
+            }
+        }
+        
 
         @Override
         public void setProcessID(Long processID) {
@@ -788,6 +822,15 @@ public class TrainHtrPlus extends TrainHtr {
             }
         }
 
+        @Override
+        public void attach(Process process) {
+        	Long aLong = SysUtils.processId(process);
+	        if (aLong != null) {
+	            setProcessID(aLong);
+	        }
+	        trainerHTR.notifyObservers(process);
+        }
+        
         @Override
         public void setProcessID(Long processID) {
             this.processID = processID;

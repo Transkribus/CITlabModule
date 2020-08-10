@@ -5,7 +5,6 @@
  */
 package de.uros.citlab.module.util;
 
-import eu.transkribus.core.util.SysUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -29,6 +28,8 @@ public class PythonUtil {
 
         void handleError(String line);
 
+        void attach(Process process);
+        
         void setProcessID(Long processID);
     }
 
@@ -91,10 +92,7 @@ public class PythonUtil {
         ProcessBuilder pb = new ProcessBuilder(cmd).directory(execFolder);
         try {
             Process p = pb.start();
-            Long aLong = SysUtils.processId(p);
-            if (aLong != null) {
-                listener.setProcessID(aLong);
-            }
+            listener.attach(p);
             final BufferedReader errMsg = new BufferedReader(new InputStreamReader(p.getErrorStream()));
             BufferedReader outMsg = new BufferedReader(new InputStreamReader(p.getInputStream()));
             ExecutorService pool = Executors.newFixedThreadPool(2, new ThreadFactory() {
