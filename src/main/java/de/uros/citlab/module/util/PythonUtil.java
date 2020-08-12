@@ -5,6 +5,7 @@
  */
 package de.uros.citlab.module.util;
 
+import org.apache.commons.exec.ShutdownHookProcessDestroyer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -22,6 +23,8 @@ import java.util.concurrent.ThreadFactory;
 public class PythonUtil {
     private static final Logger LOG = LoggerFactory.getLogger(PythonUtil.class);
 
+    private static final ShutdownHookProcessDestroyer PROCESS_DESTROYER = new ShutdownHookProcessDestroyer();
+    
     public interface ProcessListener {
 
         void handleOutput(String line);
@@ -93,6 +96,8 @@ public class PythonUtil {
         try {
             Process p = pb.start();
             listener.attach(p);
+            PROCESS_DESTROYER.add(p);
+            
             final BufferedReader errMsg = new BufferedReader(new InputStreamReader(p.getErrorStream()));
             BufferedReader outMsg = new BufferedReader(new InputStreamReader(p.getInputStream()));
             ExecutorService pool = Executors.newFixedThreadPool(2, new ThreadFactory() {
