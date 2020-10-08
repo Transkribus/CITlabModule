@@ -6,6 +6,8 @@
 package de.uros.citlab.module.util;
 
 import com.achteck.misc.log.Logger;
+
+import de.uros.citlab.module.types.IImageFactory;
 import de.uros.citlab.module.types.PageStruct;
 import eu.transkribus.core.model.beans.customtags.CssSyntaxTag;
 import eu.transkribus.core.model.beans.customtags.ReadingOrderTag;
@@ -283,7 +285,7 @@ public class PageXmlUtil {
         return res;
     }
 
-    public static List<PageStruct> getPages(String[] images, String[] xmls) {
+    public static List<PageStruct> getPages(String[] images, String[] xmls, IImageFactory imageFactory) {
         List<PageStruct> res = new LinkedList<>();
         boolean imgValid = images != null;
         boolean xmlValid = xmls != null;
@@ -295,7 +297,7 @@ public class PageXmlUtil {
         }
         int len = imgValid ? images.length : xmls.length;
         for (int i = 0; i < len; i++) {
-            res.add(new PageStruct(xmlValid ? new File(xmls[i]) : null, imgValid ? new File(images[i]) : null));
+            res.add(new PageStruct(xmlValid ? new File(xmls[i]) : null, imgValid ? new File(images[i]) : null, imageFactory));
         }
         return res;
     }

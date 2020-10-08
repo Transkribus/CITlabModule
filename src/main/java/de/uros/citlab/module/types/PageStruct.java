@@ -1,6 +1,5 @@
 package de.uros.citlab.module.types;
 
-import de.planet.imaging.types.HybridImage;
 import de.uros.citlab.module.util.PageXmlUtil;
 import eu.transkribus.core.model.beans.pagecontent.PcGtsType;
 import eu.transkribus.interfaces.types.Image;
@@ -20,28 +19,21 @@ public class PageStruct {
     private final File pathXml;
     private Image img;
     private final File pathImg;
+    private IImageFactory imageFactory; 
 
-    public PageStruct(File pathXml, File pathImg) {
-        this(pathXml,pathImg,true);
+    public PageStruct(File pathXml, File pathImg, IImageFactory imageBuilder) {
+		this(pathXml, pathImg, true, imageBuilder);
     }
-    public PageStruct(File pathXml, File pathImg, boolean forceExistance) {
+    public PageStruct(File pathXml, File pathImg, boolean forceExistance, IImageFactory imageBuilder) {
         if (pathImg == null && pathXml == null) {
             throw new RuntimeException("path to image and xml is null");
         }
         this.pathXml = pathXml != null ? pathXml : PageXmlUtil.getXmlPath(pathImg, forceExistance);
         this.pathImg = pathImg != null ? pathImg : PageXmlUtil.getImagePath(pathXml,forceExistance);
+		setImageFactory(imageBuilder);
     }
 
-    public PageStruct(File pathXml, Image img) {
-        if (img == null || pathXml == null) {
-            throw new RuntimeException("image or path to xml is null");
-        }
-        this.pathXml = pathXml;
-        this.pathImg = null;
-        this.img = img;
-    }
-
-    public PageStruct(File xmlOrImgFile) {
+    public PageStruct(File xmlOrImgFile, IImageFactory imageBuilder) {
         if (xmlOrImgFile.getName().toLowerCase().endsWith(".xml")) {
             pathXml = xmlOrImgFile;
             pathImg = PageXmlUtil.getImagePath(xmlOrImgFile, true);
@@ -49,20 +41,28 @@ public class PageStruct {
             pathImg = xmlOrImgFile;
             pathXml = PageXmlUtil.getXmlPath(xmlOrImgFile, true);
         }
+        setImageFactory(imageBuilder);
     }
-
-    public Image getImg() {
+    
+	private void setImageFactory(IImageFactory imageFactory) {
+		if(imageFactory == null) {
+			imageFactory = new DefaultImageFactory();
+		}
+		this.imageFactory = imageFactory;
+	}
+	
+	public Image getImg() {
         if (img == null) {
-            try {
-                img = new Image(HybridImage.newInstance(pathImg.toURI().toURL()).getAsOpenCVMatImage());
-            } catch (MalformedURLException ex) {
-                throw new RuntimeException(ex);
-            }
+	    	try {
+	        	img = imageFactory.create(pathImg.toURI().toURL());
+	        } catch (MalformedURLException ex) {
+				throw new RuntimeException(ex);
+			}
         }
         return img;
     }
-
-    public void saveXml() {
+	
+	public void saveXml() {
         PageXmlUtil.marshal(getXml(), pathXml);
     }
 

@@ -5,19 +5,25 @@
  */
 package de.uros.citlab.module.train;
 
-import com.achteck.misc.exception.InvalidParameterException;
-import com.achteck.misc.log.Logger;
-import com.achteck.misc.param.ParamSet;
-import de.planet.trainer.Trainer;
-import de.planet.trainer.factory.SNetworkFactory;
-import de.uros.citlab.module.types.ArgumentLine;
-import de.uros.citlab.module.types.Key;
-import de.uros.citlab.module.util.*;
-import eu.transkribus.interfaces.ITrainHtr;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.Observable;
+
+import com.achteck.misc.exception.InvalidParameterException;
+import com.achteck.misc.log.Logger;
+import com.achteck.misc.param.ParamSet;
+
+import de.planet.trainer.Trainer;
+import de.planet.trainer.factory.SNetworkFactory;
+import de.uros.citlab.module.types.ArgumentLine;
+import de.uros.citlab.module.types.IImageFactory;
+import de.uros.citlab.module.types.Key;
+import de.uros.citlab.module.util.CharMapUtil;
+import de.uros.citlab.module.util.FileUtil;
+import de.uros.citlab.module.util.MetadataUtil;
+import de.uros.citlab.module.util.PropertyUtil;
+import de.uros.citlab.module.util.TrainDataUtil;
+import eu.transkribus.interfaces.ITrainHtr;
 
 /**
  * @author gundram
@@ -30,6 +36,8 @@ public class TrainHtr extends Observable implements ITrainHtr {
     private static final String INTERN_SPRNN_BEST = "best_net.sprnn";
     public static final String EVENT_PRESENT_OBSERVABLE = "present_observable";
 
+    private IImageFactory imageFactory;
+    
     public static class Status {
 
         public int epoch;
@@ -57,8 +65,13 @@ public class TrainHtr extends Observable implements ITrainHtr {
         }
 
     }
+    
     public TrainHtr() {
-//        addReflection(this, TrainHtrSGD.class);
+    	this(null);
+    }
+    
+    public TrainHtr(IImageFactory imageFactory) {
+    	this.imageFactory = imageFactory;
     }
 
     @Override
@@ -69,7 +82,7 @@ public class TrainHtr extends Observable implements ITrainHtr {
 
     @Override
     public void createTrainData(String[] pageXmls, String outputDir, String pathToCharMap, String[] props) {
-        TrainDataUtil.createTrainData(pageXmls, outputDir, pathToCharMap, props,this);
+        TrainDataUtil.createTrainData(pageXmls, outputDir, pathToCharMap, props,this,imageFactory);
     }
 
     @Override
@@ -287,7 +300,7 @@ public class TrainHtr extends Observable implements ITrainHtr {
 //        ArgumentLine al = new ArgumentLine();
 //        al.addArgument("net_in", "/home/gundram/devel/projects/barlach/nets/barlach_20161118.sprnn");
 //        args = al.getArgs();
-        TrainHtr te = new TrainHtr();
+        TrainHtr te = new TrainHtr(null);
         te.createHtr("/home/gundram/devel/projects/barlach/out.sprnn", "/home/gundram/devel/projects/barlach/configs/cm.txt", null);
     }
 }

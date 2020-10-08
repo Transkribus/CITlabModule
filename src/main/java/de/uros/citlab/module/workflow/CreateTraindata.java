@@ -74,7 +74,9 @@ public class CreateTraindata extends ParamTreeOrganizer {
 
     public void run() {
         if (isValid(folderSnipets) && isValid(folderPageXml)) {
-            TrainDataUtil.runCreateTraindata(new File(folderPageXml), new File(folderSnipets), fileCharMap == null || fileCharMap.isEmpty() ? null : new File(fileCharMap), props,null);
+            TrainDataUtil.runCreateTraindata(new File(folderPageXml), 
+            		new File(folderSnipets), fileCharMap == null || fileCharMap.isEmpty() ? null : new File(fileCharMap), 
+            		props, null, null);
         }
     }
 

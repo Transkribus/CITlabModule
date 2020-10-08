@@ -5,6 +5,23 @@
  */
 package de.uros.citlab.module.util;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.Normalizer;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Observable;
+
+import org.apache.commons.math3.util.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.planet.citech.trainer.loader.IImageLoader;
 import de.planet.imaging.types.HybridImage;
 import de.planet.math.geom2d.types.Polygon2DInt;
@@ -15,6 +32,7 @@ import de.uros.citlab.errorrate.interfaces.IStringNormalizer;
 import de.uros.citlab.errorrate.normalizer.StringNormalizerDft;
 import de.uros.citlab.errorrate.util.ObjectCounter;
 import de.uros.citlab.module.types.ErrorNotification;
+import de.uros.citlab.module.types.IImageFactory;
 import de.uros.citlab.module.types.Key;
 import de.uros.citlab.module.types.LineImage;
 import de.uros.citlab.module.types.PageStruct;
@@ -22,17 +40,13 @@ import de.uros.citlab.tokenizer.TokenizerCategorizer;
 import de.uros.citlab.tokenizer.categorizer.CategorizerWordMergeGroups;
 import de.uros.citlab.tokenizer.interfaces.ICategorizer;
 import de.uros.citlab.tokenizer.interfaces.ITokenizer;
-import eu.transkribus.core.model.beans.pagecontent.*;
+import eu.transkribus.core.model.beans.pagecontent.BaselineType;
+import eu.transkribus.core.model.beans.pagecontent.MetadataType;
+import eu.transkribus.core.model.beans.pagecontent.PcGtsType;
+import eu.transkribus.core.model.beans.pagecontent.TextLineType;
+import eu.transkribus.core.model.beans.pagecontent.TextRegionType;
+import eu.transkribus.core.model.beans.pagecontent.TranskribusMetadataType;
 import eu.transkribus.core.util.PageXmlUtils;
-import org.apache.commons.math3.util.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.Normalizer;
-import java.util.*;
 
 /**
  * @author gundram
@@ -115,13 +129,13 @@ public class TrainDataUtil {
         }
     }
 
-    public static void createTrainData(String[] pageXmls, String outputDir, String pathToCharMap, String[] props, Observable observable) {
+    public static Statistic createTrainData(String[] pageXmls, String outputDir, String pathToCharMap, String[] props, Observable observable, IImageFactory imageBuilder) {
         boolean saveCharMap = pathToCharMap != null && !pathToCharMap.isEmpty();
         String[] propsTraindata = props;
         if (saveCharMap) {
             propsTraindata = PropertyUtil.setProperty(props, Key.STATISTIC, "true");
         }
-        Statistic statistic = createTrainData(pageXmls, outputDir, propsTraindata, observable);
+        Statistic statistic = createTrainData(pageXmls, outputDir, propsTraindata, observable, imageBuilder);
         if (statistic != null) {
             if (statistic.statChar.isEmpty()) {
                 RuntimeException runtimeException = new RuntimeException("training of test/validation set contains no transriptions in " + pageXmls.length + " pages.");
@@ -143,14 +157,15 @@ public class TrainDataUtil {
                 CharMapUtil.saveCharMap(statistic.getStatChar(), new File(pathToCharMap));
             }
         }
+        return statistic;
     }
 
-    public static int runCreateTraindata(File folderPageXml, File folderSnipets, File charMap, String[] props, Observable observable) {
+    public static int runCreateTraindata(File folderPageXml, File folderSnipets, File charMap, String[] props, Observable observable, IImageFactory imageBuilder) {
         Collection<File> listFiles = FileUtil.listFiles(folderPageXml, "xml", true);
         FileUtil.deleteMetadataAndMetsFiles(listFiles);
         String[] names = FileUtil.asStringList(listFiles);
         props = PropertyUtil.setProperty(props, KEY_SRC_FOLDER, folderPageXml.getAbsolutePath());
-        createTrainData(names, folderSnipets == null ? null : folderSnipets.getAbsolutePath(), charMap == null ? null : charMap.getAbsolutePath(), props, observable);
+        createTrainData(names, folderSnipets == null ? null : folderSnipets.getAbsolutePath(), charMap == null ? null : charMap.getAbsolutePath(), props, observable, imageBuilder);
         return names.length;
     }
 
@@ -222,7 +237,7 @@ public class TrainDataUtil {
         return stat;
     }
 
-    public static Statistic createTrainData(String[] pageXmls, String outputDir, String[] props, Observable observable) {
+    public static Statistic createTrainData(String[] pageXmls, String outputDir, String[] props, Observable observable, IImageFactory imageFactory) {
 //        ObjectCounter<Character> statChar = (PropertyUtil.isPropertyTrue(props, Key.STATISTIC) || createCharacterStatistic) ? new ObjectCounter<Character>() : null;
 //        ObjectCounter<String> statWord = PropertyUtil.isPropertyTrue(props, Key.CREATEDICT) ? new ObjectCounter<String>() : null;
         IStringNormalizer sn = null;
@@ -254,7 +269,7 @@ public class TrainDataUtil {
         for (int i = 0; i < pageXmls.length; i++) {
             String xmlFilePath = pageXmls[i];
             File fileXml = new File(xmlFilePath);
-            PageStruct page = saveTrainData ? new PageStruct(fileXml) : new PageStruct(fileXml, (File) null, false);
+            PageStruct page = saveTrainData ? new PageStruct(fileXml, imageFactory) : new PageStruct(fileXml, (File) null, false, imageFactory);
             try {
                 PcGtsType pageType = page.getXml();
                 if (statuses != null) {

@@ -15,6 +15,7 @@ import de.uros.citlab.errorrate.util.ObjectCounter;
 import de.uros.citlab.module.htr.HTRParser;
 import de.uros.citlab.module.htr.HTRParserPlus;
 import de.uros.citlab.module.types.HTR;
+import de.uros.citlab.module.types.IImageFactory;
 import de.uros.citlab.module.types.Key;
 import de.uros.citlab.module.types.LineImage;
 import de.uros.citlab.module.types.PageStruct;
@@ -46,7 +47,16 @@ public class Text2ImageParser extends ParamSetOrganizer implements IText2Image {
     private ObjectCounter<Stat> oc = new ObjectCounter<>();
     //    IHtr htrImpl = null;
     private String toolName = "T2I";
+    private IImageFactory imageFactory;
 
+    public Text2ImageParser() {
+		this(null);
+	}
+    
+    public Text2ImageParser(IImageFactory imageFactory) {
+		this.imageFactory = imageFactory;
+	}
+    
     @Override
     public String usage() {
         return "tries to match given text to given baselines. " +
@@ -176,7 +186,7 @@ public class Text2ImageParser extends ParamSetOrganizer implements IText2Image {
             pathToCharacterMap, String pathToText, String[] images, String[] xmlInOut, String[] storages, String[] props) {
         LOG.info("process xmls {}...", Arrays.asList(images));
         boolean deleteLineBreaks = PropertyUtil.isPropertyTrue(props, Key.T2I_IGNORE_LB);
-        List<PageStruct> pages = PageXmlUtil.getPages(images, xmlInOut);
+        List<PageStruct> pages = PageXmlUtil.getPages(images, xmlInOut, imageFactory);
         List<String> in = pathToText != null && !pathToText.isEmpty() ?
                 loadReferencePrepareBidi(new File(pathToText), deleteLineBreaks) :
                 loadReferencesFromPageStruct(pages, deleteLineBreaks);

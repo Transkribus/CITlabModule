@@ -43,6 +43,7 @@ import de.planet.reco.preproc.SizeNormalizerSimple;
 import de.planet.reco.preproc.SlantNormalizer;
 import de.planet.reco.preproc.util.ResizeUtil.Algorithm;
 import de.uros.citlab.module.types.ErrorNotification;
+import de.uros.citlab.module.types.IImageFactory;
 import de.uros.citlab.module.types.Key;
 import de.uros.citlab.module.util.CharMapUtil;
 import de.uros.citlab.module.util.FileUtil;
@@ -63,7 +64,11 @@ public class TrainHtrPlus extends TrainHtr {
     private static final Logger LOG = LoggerFactory.getLogger(TrainHtrPlus.class.getName());
 
     public TrainHtrPlus() {
-        super();
+        this(null);
+    }
+    
+    public TrainHtrPlus(IImageFactory imageFactory) {
+        super(imageFactory);
     }
 
     @Override

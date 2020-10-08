@@ -377,7 +377,7 @@ public class RunTrainingSemiSupervised extends ParamTreeOrganizer {
                 try {
                     FileUtils.deleteQuietly(folderSnipets);
                     folderSnipets.mkdirs();
-                    int res = TrainDataUtil.runCreateTraindata(folderPageXml, folderSnipets, charMap, props,null);
+                    int res = TrainDataUtil.runCreateTraindata(folderPageXml, folderSnipets, charMap, props, null, null);
                     if (res == 0) {
                         LOG.warn("copy folder - assume that folder " + folderPageXml.getAbsolutePath() + " contains snipets.");
                         FileUtils.copyDirectory(folderPageXml, folderSnipets);

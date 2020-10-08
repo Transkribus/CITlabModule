@@ -32,7 +32,7 @@ public class BIDI_Test {
 
     @Before
     public void setUp() {
-        page = new PageStruct(new File(TestFiles.getPrefix(), "test_bidi/ms50-128r-large.jpg"));
+        page = new PageStruct(new File(TestFiles.getPrefix(), "test_bidi/ms50-128r-large.jpg"), null);
     }
 
     @After

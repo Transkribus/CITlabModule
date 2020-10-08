@@ -71,7 +71,7 @@ public class ExtractConfMats extends ParamTreeOrganizer {
             if (!tgtXml.equals(srcXml)) {
                 FileUtils.copyFile(srcXml, tgtXml);
             }
-            TrainDataUtil.createTrainData(new String[]{PageXmlUtil.getXmlPath(srcImg).getAbsolutePath()}, folderTraindata.getAbsolutePath(), null,null);
+            TrainDataUtil.createTrainData(new String[]{PageXmlUtil.getXmlPath(srcImg).getAbsolutePath()}, folderTraindata.getAbsolutePath(), null, null, null);
             htr.process(htrName.getAbsolutePath(), null, null, img, tgtXml.getAbsolutePath(), folderTraindata.getAbsolutePath(), null, null);
         }
     }
